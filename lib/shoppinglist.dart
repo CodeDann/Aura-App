@@ -24,18 +24,17 @@ class _shoppinglist extends State<shoppinglist> {
   Future<void> _getData() async {
     // get document from database
     DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('shoppinglist').get();
+    // convert data to a map
     var data = snapshot.data() as Map;
-    var shoppingData = data['items'] as List<dynamic>;
 
-    List<String> shopping = [];
-    for( int i = 0; i < shoppingData.length; i++){
-      print(shoppingData[i]);
-      shopping.add(shoppingData[i]);
-    }
-    contents = shopping;
-    for( int i = 0; i < contents.length; i++){
-      print(contents[i]);
-    }
+    //iterate over map and add each value to contents
+    List<String> shoppingdata = [];
+    data.forEach((key, value) {
+      shoppingdata.add(value);
+    });
+    contents = shoppingdata;
+
+    //build page with updated values
     setState(() {
       contents;
     });
@@ -86,6 +85,7 @@ class _shoppinglist extends State<shoppinglist> {
       contents;
     });
   }
+
   @override
   void initState() {
     _getData().then((value){
@@ -172,6 +172,7 @@ class _shoppinglist extends State<shoppinglist> {
             left: 30,
             bottom: 20,
             child: FloatingActionButton(
+              heroTag: 'addBtn',
               onPressed: _additem,
               tooltip: 'Add an item',
               child: const Icon(Icons.add),
@@ -181,6 +182,7 @@ class _shoppinglist extends State<shoppinglist> {
             right: 30,
             bottom: 20,
             child: FloatingActionButton(
+              heroTag: 'scanBtn',
               onPressed: _scanitem,
               tooltip: 'Scan in a barcode',
               child: const Icon(Icons.camera_alt_outlined),
