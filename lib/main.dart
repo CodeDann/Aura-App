@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_waste/shoppinglist.dart';
 import 'package:food_waste/viewfridge.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:food_waste/wastedfood.dart';
 
 void main() async {
   // setup firebase db upon initilisation
@@ -110,6 +111,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const shoppinglist()),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Wasted Food'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const wastedfood()),
                 );
               },
             ),

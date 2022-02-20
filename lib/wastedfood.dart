@@ -1,51 +1,54 @@
-import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:food_waste/main.dart';
 import 'package:food_waste/viewfridge.dart';
+import 'package:food_waste/shoppinglist.dart';
 // firebase and firestore installs
 // import 'package:firebase_core/firebase_core.dart/';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:food_waste/wastedfood.dart';
+import 'package:intl/intl.dart';
 
 
-class shoppinglist extends StatefulWidget {
-  const shoppinglist({Key? key}) : super(key: key);
+class wastedfood extends StatefulWidget {
+  const wastedfood({Key? key}) : super(key: key);
 
   @override
-  State<shoppinglist> createState() => _shoppinglist();
+  State<wastedfood> createState() => _wastedfood();
 }
 
-class _shoppinglist extends State<shoppinglist> {
+class _wastedfood extends State<wastedfood> {
 
-  List<List<String>> contents = [];
+  List<dynamic> contents = [];
 
   FirebaseFirestore Database = FirebaseFirestore.instance;
 
   late String codeDialog;
-  late List<String> addedItem = [];
+  late Map addedItem = {};
+  late DateTime selectedDate = DateTime.now();
+
+  //default date formatter for the page
+  DateFormat formatter = DateFormat('yyyy-MM-dd');
 
   TextEditingController _textFieldController1 = TextEditingController();
   TextEditingController _textFieldController2 = TextEditingController();
+  TextEditingController _textFieldController3 = TextEditingController();
 
   // gets data on page load
   Future<void> _getData() async {
     // get document from database
-    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('shoplist').get();
+    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('wastedfood').get();
     // convert data to a map
     var data = snapshot.data() as Map;
     var dataArr = data['items'] as List;
 
-    //convert the map from the db into a 2d list of strings
-    List<List<String>> items = [];
+    //convert the map from the db into a Array of Maps
     for( int i = 0; i < dataArr.length; i++){
-      List<String> item = [];
-      item.add(dataArr[i]['Name']);
-      item.add(dataArr[i]['Quantity']);
-      items.add(item);
+      // handle the date and format nicely
+      DateTime date = dataArr[i]['Date'].toDate();
+      String formattedDate = formatter.format(date);
+      dataArr[i]['Date'] = formattedDate;
     }
-    print(items);
-    contents = items;
+    contents = dataArr;
 
     //build page with updated values
     setState(() {
@@ -53,65 +56,94 @@ class _shoppinglist extends State<shoppinglist> {
     });
   }
 
+  _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        addedItem['Date'] = formatter.format(picked);
+      });
+    }
+  }
+
+
   // handles the textpopup
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: Text('Add item'),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _textFieldController1,
-                  decoration: const InputDecoration(hintText: "Item Name"),
-                ),
-                TextField(
-                  controller: _textFieldController2,
-                  decoration: const InputDecoration(hintText: "Quantity"),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              FlatButton(
-                color: Colors.red,
-                textColor: Colors.white,
-                child: Text('Cancel'),
-                onPressed: () {
-                  setState(() {
-                    _textFieldController1.clear();
-                    _textFieldController2.clear();
-                    Navigator.pop(context);
-                  });
-                },
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Text('Add item'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: _textFieldController1,
+                    decoration: const InputDecoration(hintText: "Item Name"),
+                  ),
+                  TextField(
+                    controller: _textFieldController2,
+                    decoration: const InputDecoration(hintText: "Reason"),
+                  ),
+                  TextField(
+                    controller: _textFieldController3,
+                    decoration: const InputDecoration(hintText: "Quantity"),
+                  ),
+                  RaisedButton(
+                    onPressed: () => _selectDate(context),
+                    child: Text('Select Date'),
+                  ),
+                ],
               ),
-              FlatButton(
-                color: Colors.green,
-                textColor: Colors.white,
-                child: Text('Add'),
-                onPressed: () {
-                  //get the values from both text boxes and call _addItem
-                  addedItem.add(_textFieldController1.text);
-                  addedItem.add(_textFieldController2.text);
-                  _additem(addedItem);
-                  addedItem = [];
-                  setState(() {
-                    _textFieldController1.clear();
-                    _textFieldController2.clear();
-                    Navigator.pop(context);
-                  });
-                },
-              ),
+              actions: <Widget>[
+                FlatButton(
+                  color: Colors.red,
+                  textColor: Colors.white,
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    setState(() {
+                      _textFieldController1.clear();
+                      _textFieldController2.clear();
+                      _textFieldController3.clear();
+                      Navigator.pop(context);
+                    });
+                  },
+                ),
+                FlatButton(
+                  color: Colors.green,
+                  textColor: Colors.white,
+                  child: Text('Add'),
+                  onPressed: () {
+                    //get the values from both text boxes and call _addItem
+                    addedItem['Name'] = _textFieldController1.text;
+                    addedItem['Reason'] = _textFieldController2.text;
+                    addedItem['Quantity'] = _textFieldController3.text;
+                    _additem(addedItem);
+                    addedItem = {};
+                    setState(() {
+                      _textFieldController1.clear();
+                      _textFieldController2.clear();
+                      _textFieldController3.clear();
+                      Navigator.pop(context);
+                    });
+                  },
+                ),
 
-            ],
-          );
+              ],
+            );
+          });
         });
   }
 
   //adds item to contents and db then rebuilds page
-  void _additem(List<String> item){
+  void _additem(Map item){
+
     //add to contents
     contents.add(item);
 
@@ -121,14 +153,16 @@ class _shoppinglist extends State<shoppinglist> {
     List<Map> items = [];
     for( int i = 0; i < contents.length; i++){
       //asign the correct key value pairs
-      map["Name"] = contents[i][0];
-      map["Quantity"] = contents[i][1];
+      map["Date"] = DateTime.parse(contents[i]['Date']);
+      map["Name"] = contents[i]['Name'];
+      map["Reason"] = contents[i]['Reason'];
+      map["Quantity"] = contents[i]['Quantity'];
       items.add(map);
       map = {};
     }
 
     //sets the entire document contents to map
-    Database.collection('FoodWasteData').doc('shoplist').set({'items': items});
+    Database.collection('FoodWasteData').doc('wastedfood').set({'items': items});
 
     //rebuild page with updated contents
     setState(() {
@@ -151,14 +185,16 @@ class _shoppinglist extends State<shoppinglist> {
     List<Map> items = [];
     for( int i = 0; i < contents.length; i++){
       //asign the correct key value pairs
-      map["Name"] = contents[i][0];
-      map["Quantity"] = contents[i][1];
+      map["Date"] = DateTime.parse(contents[i]['Date']);
+      map["Name"] = contents[i]['Name'];
+      map["Reason"] = contents[i]['Reason'];
+      map["Quantity"] = contents[i]['Quantity'];
       items.add(map);
       map = {};
     }
 
     //sets the entire document contents to map
-    Database.collection('FoodWasteData').doc('shoplist').set({'items': items});
+    Database.collection('FoodWasteData').doc('wastedfood').set({'items': items});
 
     //rebuild page with updated contents
     setState(() {
@@ -231,7 +267,7 @@ class _shoppinglist extends State<shoppinglist> {
           ),
         ),
         appBar: AppBar(
-          title: const Text('View Fridge'),
+          title: const Text('Wasted Food'),
         ),
         body: ListView.separated(
           padding: const EdgeInsets.all(8),
@@ -244,11 +280,13 @@ class _shoppinglist extends State<shoppinglist> {
                   children: [
                     IconButton(
                       onPressed: () => _removeItem(index),
-                      icon: const Icon(Icons.check_box_rounded),
+                      icon: const Icon(Icons.delete_forever),
                     ),
                     Spacer(),
-                    Expanded(child: Text(contents[index][0],),),
-                    Expanded(child: Text(contents[index][1],),),
+                    Expanded(child: Text(contents[index]['Name'],),),
+                    Expanded(child: Text(contents[index]['Reason'],),),
+                    Expanded(child: Text(contents[index]['Quantity'],),),
+                    Expanded(child: Text(contents[index]['Date'],),),
                   ]
               ),
             );
