@@ -6,6 +6,16 @@ import 'package:food_waste/viewfridge.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
+// class shoppingItem {
+//   String name;
+//   String quantity;
+//
+//   shoppingItem(String name, String quantity) {
+//     this.name = name;
+//     this.quantity = quantity;
+//   }
+// }
+
 class shoppinglist extends StatefulWidget {
   const shoppinglist({Key? key}) : super(key: key);
 
@@ -15,11 +25,38 @@ class shoppinglist extends StatefulWidget {
 
 class _shoppinglist extends State<shoppinglist> {
 
-  final List<String> entries = <String>['1', '2', '3'];
-  final List<int> colorCodes = <int>[100, 100, 100];
+  List<String> entries = [];
+  List<int> colorCodes = [];
+
+  FirebaseFirestore Database = FirebaseFirestore.instance;
+
+  Future<void> _getData() async {
+    // get document from database
+    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('shoppinglist').get();
+    var data = snapshot.data() as Map;
+    var shoppingData = data['items'] as List<dynamic>;
+    shoppingData.forEach((item) {
+      // each item is a row of the db
+      var itemContents = item as Map;
+
+      String singleItem = '';
+      itemContents.forEach((key, value) {
+        singleItem += value.toString();
+        singleItem += ' ';
+      });
+      entries.add(singleItem);
+      colorCodes.add(100);
+    });
+    print(entries);
+    setState(() {
+      entries;
+      colorCodes;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -76,12 +113,17 @@ class _shoppinglist extends State<shoppinglist> {
             return Container(
               height: 50,
               color: Colors.amber[colorCodes[index]],
-              child: Center(child: Text('Entry ${entries[index]}')),
+              child: Center(child: Text('${entries[index]}')),
             );
           },
           separatorBuilder: (BuildContext context, int index) => const Divider(),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _getData,
+        tooltip: 'CLick to get data from database',
+        child: const Icon(Icons.add),
+      ), // This trailing co
     );
   }
 }

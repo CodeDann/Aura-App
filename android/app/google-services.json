@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "703861169930",
+    "project_id": "foodwaste-624c9",
+    "storage_bucket": "foodwaste-624c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703861169930:android:36a019fbbde93ca32524f3",
+        "android_client_info": {
+          "package_name": "com.example.food_waste"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "703861169930-daa82ee498sanc2qbo98t330sp27qbik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnmMlFf8YAuxoZk6X9Vp2AjLUhi56w5gE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "703861169930-daa82ee498sanc2qbo98t330sp27qbik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
