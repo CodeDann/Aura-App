@@ -21,6 +21,12 @@ class _shoppinglist extends State<shoppinglist> {
 
   FirebaseFirestore Database = FirebaseFirestore.instance;
 
+  late String codeDialog;
+  late String valueText;
+
+  TextEditingController _textFieldController = TextEditingController();
+
+  // gets data on page load
   Future<void> _getData() async {
     // get document from database
     DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('shoppinglist').get();
@@ -40,12 +46,56 @@ class _shoppinglist extends State<shoppinglist> {
     });
   }
 
-  void _additem(){
-    // add item to db and contents then rebuild
-    String itemToAdd = 'Milk, 1L';
+  //handles the textpopup
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Add item'),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  valueText = value;
+                });
+              },
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: "Enter item here"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                textColor: Colors.white,
+                child: Text('Cancel'),
+                onPressed: () {
+                  setState(() {
+                    _textFieldController.clear();
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              FlatButton(
+                color: Colors.green,
+                textColor: Colors.white,
+                child: Text('Add'),
+                onPressed: () {
+                  _additem(valueText);
+                  setState(() {
+                    _textFieldController.clear();
+                    Navigator.pop(context);
+                  });
+                },
+              ),
 
+            ],
+          );
+        });
+  }
+
+  //adds item to contents and db then rebuilds page
+  void _additem(String item){
     //add to contents
-    contents.add(itemToAdd);
+    contents.add(item);
 
     //add item to database
     // create a map with the contents of contents
@@ -66,6 +116,7 @@ class _shoppinglist extends State<shoppinglist> {
     //open camera and scan in barcode then _additem()
   }
 
+  //removes item at context[index] from page and db
   void _removeItem(int index){
     // remove item from internal contents
     contents.removeAt(index);
@@ -173,7 +224,7 @@ class _shoppinglist extends State<shoppinglist> {
             bottom: 20,
             child: FloatingActionButton(
               heroTag: 'addBtn',
-              onPressed: _additem,
+              onPressed: () {_displayTextInputDialog(context);},
               tooltip: 'Add an item',
               child: const Icon(Icons.add),
             ),
