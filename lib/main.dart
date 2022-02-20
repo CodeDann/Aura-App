@@ -4,6 +4,7 @@ import 'package:food_waste/viewfridge.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
+  // setup firebase db upon initilisation
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Test App',
+      title: 'Food Waste App',
       theme: ThemeData(
         // This is the theme of your application.
         //

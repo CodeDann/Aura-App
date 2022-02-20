@@ -6,16 +6,6 @@ import 'package:food_waste/viewfridge.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-// class shoppingItem {
-//   String name;
-//   String quantity;
-//
-//   shoppingItem(String name, String quantity) {
-//     this.name = name;
-//     this.quantity = quantity;
-//   }
-// }
-
 class shoppinglist extends StatefulWidget {
   const shoppinglist({Key? key}) : super(key: key);
 
@@ -25,7 +15,9 @@ class shoppinglist extends StatefulWidget {
 
 class _shoppinglist extends State<shoppinglist> {
 
-  List<String> entries = [];
+
+  // List<String> row = [];
+  List<String> contents = [];
   List<int> colorCodes = [];
 
   FirebaseFirestore Database = FirebaseFirestore.instance;
@@ -35,28 +27,53 @@ class _shoppinglist extends State<shoppinglist> {
     DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('shoppinglist').get();
     var data = snapshot.data() as Map;
     var shoppingData = data['items'] as List<dynamic>;
-    shoppingData.forEach((item) {
-      // each item is a row of the db
-      var itemContents = item as Map;
 
-      String singleItem = '';
-      itemContents.forEach((key, value) {
-        singleItem += value.toString();
-        singleItem += ' ';
-      });
-      entries.add(singleItem);
+    List<String> shopping = [];
+    for( int i = 0; i < shoppingData.length; i++){
+      print(shoppingData[i]);
+      shopping.add(shoppingData[i]);
       colorCodes.add(100);
-    });
-    print(entries);
+    }
+    contents = shopping;
+    for( int i = 0; i < contents.length; i++){
+      print(contents[i]);
+    }
+    // shoppingData.forEach((item) {
+    //   // each item is a row of the db
+    //   var itemContents = item as Map;
+    //   for( int i = 0; i < itemContents.length; i++ ){
+    //     contents.add(itemContents[i].toString());
+    //     colorCodes.add(100);
+    //     print(contents[i]);
+    //   }
+    // });
     setState(() {
-      entries;
+      contents;
       colorCodes;
     });
   }
 
+  void _removeItem(int index){
+    print('before removing: ' + contents.toString());
+    contents.removeAt(index);
+    colorCodes.removeAt(index);
+    print('after removing: ' + contents.toString());
+    setState(() {
+      contents;
+      colorCodes;
+    });
+
+  }
+  @override
+  void initState() {
+    _getData().then((value){
+      print('Async data load done');
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -105,25 +122,32 @@ class _shoppinglist extends State<shoppinglist> {
       appBar: AppBar(
         title: const Text('Shopping List'),
       ),
-      body: Center(
-        child: ListView.separated(
-          padding: const EdgeInsets.all(8),
-          itemCount: entries.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              height: 50,
-              color: Colors.amber[colorCodes[index]],
-              child: Center(child: Text('${entries[index]}')),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) => const Divider(),
-        ),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(8),
+        itemCount: contents.length,
+        itemBuilder: (BuildContext context, int index) {
+        return Container(
+          height: 50,
+          color: Colors.redAccent[colorCodes[index]],
+          child: Row(
+              children: [
+                IconButton(
+                  onPressed: () => _removeItem(index),
+                  icon: const Icon(Icons.delete_forever),
+                ),
+                Text(contents[index]),
+              ]
+          ),
+        );
+        },
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _getData,
         tooltip: 'CLick to get data from database',
         child: const Icon(Icons.add),
-      ), // This trailing co
+      ),
     );
   }
 }
+
