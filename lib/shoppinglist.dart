@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:food_waste/main.dart';
 import 'package:food_waste/viewfridge.dart';
@@ -15,10 +17,7 @@ class shoppinglist extends StatefulWidget {
 
 class _shoppinglist extends State<shoppinglist> {
 
-
-  // List<String> row = [];
   List<String> contents = [];
-  List<int> colorCodes = [];
 
   FirebaseFirestore Database = FirebaseFirestore.instance;
 
@@ -32,37 +31,60 @@ class _shoppinglist extends State<shoppinglist> {
     for( int i = 0; i < shoppingData.length; i++){
       print(shoppingData[i]);
       shopping.add(shoppingData[i]);
-      colorCodes.add(100);
     }
     contents = shopping;
     for( int i = 0; i < contents.length; i++){
       print(contents[i]);
     }
-    // shoppingData.forEach((item) {
-    //   // each item is a row of the db
-    //   var itemContents = item as Map;
-    //   for( int i = 0; i < itemContents.length; i++ ){
-    //     contents.add(itemContents[i].toString());
-    //     colorCodes.add(100);
-    //     print(contents[i]);
-    //   }
-    // });
     setState(() {
       contents;
-      colorCodes;
     });
   }
 
-  void _removeItem(int index){
-    print('before removing: ' + contents.toString());
-    contents.removeAt(index);
-    colorCodes.removeAt(index);
-    print('after removing: ' + contents.toString());
+  void _additem(){
+    // add item to db and contents then rebuild
+    String itemToAdd = 'Milk, 1L';
+
+    //add to contents
+    contents.add(itemToAdd);
+
+    //add item to database
+    // create a map with the contents of contents
+    Map<String, dynamic> map = new Map();
+    for( int i = 0; i < contents.length; i++){
+      map["$i"] = contents[i];
+    }
+    //sets the entire document contents to map
+    Database.collection('FoodWasteData').doc('shoppinglist').set(map);
+
+    //rebuild page with updated contents
     setState(() {
       contents;
-      colorCodes;
     });
+  }
 
+  void _scanitem(){
+    //open camera and scan in barcode then _additem()
+  }
+
+  void _removeItem(int index){
+    // remove item from internal contents
+    contents.removeAt(index);
+
+    //remove item from database
+
+    // create a map with the contents of contents
+    Map<String, dynamic> map = new Map();
+    for( int i = 0; i < contents.length; i++){
+      map["$i"] = contents[i];
+    }
+    //sets the entire document contents to map
+    Database.collection('FoodWasteData').doc('shoppinglist').set(map);
+
+    //rebuild page with updated contents
+    setState(() {
+      contents;
+    });
   }
   @override
   void initState() {
@@ -128,7 +150,7 @@ class _shoppinglist extends State<shoppinglist> {
         itemBuilder: (BuildContext context, int index) {
         return Container(
           height: 50,
-          color: Colors.redAccent[colorCodes[index]],
+          color: Colors.redAccent[100],
           child: Row(
               children: [
                 IconButton(
@@ -142,11 +164,30 @@ class _shoppinglist extends State<shoppinglist> {
         },
         separatorBuilder: (BuildContext context, int index) => const Divider(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _getData,
-        tooltip: 'CLick to get data from database',
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned(
+            left: 30,
+            bottom: 20,
+            child: FloatingActionButton(
+              onPressed: _additem,
+              tooltip: 'Add an item',
+              child: const Icon(Icons.add),
+            ),
+          ),
+          Positioned(
+            right: 30,
+            bottom: 20,
+            child: FloatingActionButton(
+              onPressed: _scanitem,
+              tooltip: 'Scan in a barcode',
+              child: const Icon(Icons.camera_alt_outlined),
+            ),
+          ),
+        ],
+      )
     );
   }
 }
