@@ -43,7 +43,7 @@ class _myfood extends State<myfood> {
   // gets data on page load
   Future<void> _getData() async {
     // get document from database
-    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('wastedfood').get();
+    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('fridgecontents').get();
     // convert data to a map
     var data = snapshot.data() as Map;
     var dataArr = data['items'] as List;
@@ -104,7 +104,7 @@ class _myfood extends State<myfood> {
                   ),
                   RaisedButton(
                     onPressed: () => _selectDate(context),
-                    child: Text('Select Date'),
+                    child: Text('Select Expiry Date'),
                   ),
                 ],
               ),
@@ -162,14 +162,13 @@ class _myfood extends State<myfood> {
       //asign the correct key value pairs
       map["Date"] = DateTime.parse(contents[i]['Date']);
       map["Name"] = contents[i]['Name'];
-      map["Reason"] = contents[i]['Reason'];
       map["Quantity"] = contents[i]['Quantity'];
       items.add(map);
       map = {};
     }
 
     //sets the entire document contents to map
-    Database.collection('FoodWasteData').doc('wastedfood').set({'items': items});
+    Database.collection('FoodWasteData').doc('fridgecontents').set({'items': items});
 
     //rebuild page with updated contents
     setState(() {
@@ -194,14 +193,13 @@ class _myfood extends State<myfood> {
       //asign the correct key value pairs
       map["Date"] = DateTime.parse(contents[i]['Date']);
       map["Name"] = contents[i]['Name'];
-      map["Reason"] = contents[i]['Reason'];
       map["Quantity"] = contents[i]['Quantity'];
       items.add(map);
       map = {};
     }
 
     //sets the entire document contents to map
-    Database.collection('FoodWasteData').doc('wastedfood').set({'items': items});
+    Database.collection('FoodWasteData').doc('fridgecontents').set({'items': items});
 
     //rebuild page with updated contents
     setState(() {
@@ -310,30 +308,51 @@ class _myfood extends State<myfood> {
           ),
         ),
         appBar: AppBar(
-          title: const Text('Wasted Food'),
+          title: const Text('Fridge Contents'),
         ),
         body: ListView.separated(
-          padding: const EdgeInsets.all(8),
-          itemCount: contents.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              tileColor: Colors.greenAccent,
-              leading: IconButton(
-                onPressed: () => _removeItem(index),
-                icon: const Icon(Icons.delete_forever),
-              ),
-              title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(child: Text(contents[index]['Name'],),),
-                    Expanded(child: Text(contents[index]['Reason'],),),
-                    Expanded(child: Text(contents[index]['Quantity'],),),
-                    Expanded(child: Text(contents[index]['Date'],),),
-                  ]
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) => const Divider(),
+            padding: const EdgeInsets.all(8),
+            itemCount: contents.length+1,
+            itemBuilder: (BuildContext context, int index) {
+              if ( index == 0){
+                return ListTile(
+                  leading: Visibility(
+                    child: IconButton(
+                      onPressed: null,
+                      icon: const Icon(Icons.check_box_rounded),
+                    ),
+                    visible: false,
+                  ),
+                  title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(child: Text('Name'),),
+                        Expanded(child: Text('Quantity'),),
+                        Expanded(child: Text('Reason'),),
+                        Expanded(child: Text('Date'),),
+                      ]
+                  ),
+                );
+              }// end if
+              index -= 1;
+              return ListTile(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                tileColor: Colors.greenAccent,
+                leading: IconButton(
+                  onPressed: () => _removeItem(index),
+                  icon: const Icon(Icons.delete_forever),
+                ),
+                title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(child: Text(contents[index]['Name'],),),
+                      Expanded(child: Text(contents[index]['Quantity'],),),
+                      Expanded(child: Text(contents[index]['Date'],),),
+                    ]
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) => const Divider(),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Stack(

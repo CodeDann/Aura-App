@@ -281,7 +281,27 @@ class _shoppinglist extends State<shoppinglist> {
           padding: const EdgeInsets.all(8),
           itemCount: contents.length,
           itemBuilder: (BuildContext context, int index) {
+            if ( index == 0){
+              return ListTile(
+                leading: Visibility(
+                  child: IconButton(
+                    onPressed: null,
+                    icon: const Icon(Icons.check_box_rounded),
+                  ),
+                  visible: false,
+                ),
+                title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(child: Text('Name'),),
+                      Expanded(child: Text('Quantity'),),
+                    ]
+                ),
+              );
+            }// end if
+            index -= 1;
             return ListTile(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                 tileColor: Colors.greenAccent,
                 leading: IconButton(
                   onPressed: () => _removeItem(index),

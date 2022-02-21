@@ -316,8 +316,30 @@ class _wastedfood extends State<wastedfood> {
           padding: const EdgeInsets.all(8),
           itemCount: contents.length,
           itemBuilder: (BuildContext context, int index) {
+            if ( index == 0){
+              return ListTile(
+                leading: Visibility(
+                  child: IconButton(
+                    onPressed: null,
+                    icon: const Icon(Icons.check_box_rounded),
+                  ),
+                  visible: false,
+                ),
+                title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(child: Text('Name'),),
+                      Expanded(child: Text('Quantity'),),
+                      Expanded(child: Text('Reason'),),
+                      Expanded(child: Text('Date'),),
+                    ]
+                ),
+              );
+            }// end if
+            index -= 1;
             return ListTile(
-                tileColor: Colors.greenAccent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              tileColor: Colors.greenAccent,
                 leading: IconButton(
                   onPressed: () => _removeItem(index),
                   icon: const Icon(Icons.delete_forever),
