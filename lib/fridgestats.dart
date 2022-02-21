@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-// page imports
 import 'package:food_waste/main.dart';
 import 'package:food_waste/viewfridge.dart';
 import 'package:food_waste/shoppinglist.dart';
@@ -10,20 +8,19 @@ import 'package:food_waste/recipiegenerator.dart';
 import 'package:food_waste/wasteawareness.dart';
 import 'package:food_waste/fridgestats.dart';
 
-
-class viewfridge extends StatefulWidget {
-  const viewfridge({Key? key}) : super(key: key);
+class fridgestats extends StatefulWidget {
+  const fridgestats({Key? key}) : super(key: key);
 
   @override
-  State<viewfridge> createState() => _viewfridge();
+  State<fridgestats> createState() => _fridgestats();
 }
 
-class _viewfridge extends State<viewfridge> {
+class _fridgestats extends State<fridgestats> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: Drawer(
+      drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
         // space to fit everything.
@@ -112,12 +109,13 @@ class _viewfridge extends State<viewfridge> {
           ],
         ),
       ),
-        appBar: AppBar(
-          title: const Text('View Fridge'),
-        ),
-        body: Center(
-          child: Text('VIEW PICTURE OF FRIDGE'),
-        ),
+      appBar: AppBar(
+        title: const Text('Fridge Stats'),
+      ),
+      body: Center(
+        child: Text('VIEW PICTURE OF stats here'),
+      ),
     );
   }
+
 }

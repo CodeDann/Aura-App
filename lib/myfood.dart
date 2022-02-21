@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// page imports
+// page installs
 import 'package:food_waste/main.dart';
 import 'package:food_waste/viewfridge.dart';
 import 'package:food_waste/shoppinglist.dart';
@@ -16,14 +16,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 
-class wastedfood extends StatefulWidget {
-  const wastedfood({Key? key}) : super(key: key);
+class myfood extends StatefulWidget {
+  const myfood({Key? key}) : super(key: key);
 
   @override
-  State<wastedfood> createState() => _wastedfood();
+  State<myfood> createState() => _myfood();
 }
 
-class _wastedfood extends State<wastedfood> {
+class _myfood extends State<myfood> {
 
   List<dynamic> contents = [];
 
@@ -317,21 +317,21 @@ class _wastedfood extends State<wastedfood> {
           itemCount: contents.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-                tileColor: Colors.greenAccent,
-                leading: IconButton(
-                  onPressed: () => _removeItem(index),
-                  icon: const Icon(Icons.delete_forever),
-                ),
-                title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(child: Text(contents[index]['Name'],),),
-                      Expanded(child: Text(contents[index]['Reason'],),),
-                      Expanded(child: Text(contents[index]['Quantity'],),),
-                      Expanded(child: Text(contents[index]['Date'],),),
-                    ]
-                ),
-              );
+              tileColor: Colors.greenAccent,
+              leading: IconButton(
+                onPressed: () => _removeItem(index),
+                icon: const Icon(Icons.delete_forever),
+              ),
+              title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(child: Text(contents[index]['Name'],),),
+                    Expanded(child: Text(contents[index]['Reason'],),),
+                    Expanded(child: Text(contents[index]['Quantity'],),),
+                    Expanded(child: Text(contents[index]['Date'],),),
+                  ]
+              ),
+            );
           },
           separatorBuilder: (BuildContext context, int index) => const Divider(),
         ),
