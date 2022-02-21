@@ -31,14 +31,14 @@ class _myfood extends State<myfood> {
 
   late String codeDialog;
   late Map addedItem = {};
-  late DateTime selectedDate = DateTime.now();
+  late DateTime Today = DateTime.now();
+  late DateTime selectedDate = Today.add(Duration(days: 5));
 
   //default date formatter for the page
   DateFormat formatter = DateFormat('yyyy-MM-dd');
 
   TextEditingController _textFieldController1 = TextEditingController();
   TextEditingController _textFieldController2 = TextEditingController();
-  TextEditingController _textFieldController3 = TextEditingController();
 
   // gets data on page load
   Future<void> _getData() async {
@@ -67,7 +67,7 @@ class _myfood extends State<myfood> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2020),
+      firstDate: Today,
       lastDate: DateTime(2025),
     );
     if (picked != null && picked != selectedDate) {
@@ -96,10 +96,6 @@ class _myfood extends State<myfood> {
                   ),
                   TextField(
                     controller: _textFieldController2,
-                    decoration: const InputDecoration(hintText: "Reason"),
-                  ),
-                  TextField(
-                    controller: _textFieldController3,
                     decoration: const InputDecoration(hintText: "Quantity"),
                   ),
                   RaisedButton(
@@ -117,7 +113,6 @@ class _myfood extends State<myfood> {
                     setState(() {
                       _textFieldController1.clear();
                       _textFieldController2.clear();
-                      _textFieldController3.clear();
                       Navigator.pop(context);
                     });
                   },
@@ -129,14 +124,12 @@ class _myfood extends State<myfood> {
                   onPressed: () {
                     //get the values from both text boxes and call _addItem
                     addedItem['Name'] = _textFieldController1.text;
-                    addedItem['Reason'] = _textFieldController2.text;
-                    addedItem['Quantity'] = _textFieldController3.text;
+                    addedItem['Quantity'] = _textFieldController2.text;
                     _additem(addedItem);
                     addedItem = {};
                     setState(() {
                       _textFieldController1.clear();
                       _textFieldController2.clear();
-                      _textFieldController3.clear();
                       Navigator.pop(context);
                     });
                   },
@@ -328,7 +321,6 @@ class _myfood extends State<myfood> {
                       children: [
                         Expanded(child: Text('Name'),),
                         Expanded(child: Text('Quantity'),),
-                        Expanded(child: Text('Reason'),),
                         Expanded(child: Text('Date'),),
                       ]
                   ),
