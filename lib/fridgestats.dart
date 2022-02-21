@@ -8,14 +8,71 @@ import 'package:food_waste/recipiegenerator.dart';
 import 'package:food_waste/wasteawareness.dart';
 import 'package:food_waste/fridgestats.dart';
 
+// firestore installs
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class fridgestats extends StatefulWidget {
   const fridgestats({Key? key}) : super(key: key);
+
 
   @override
   State<fridgestats> createState() => _fridgestats();
 }
 
 class _fridgestats extends State<fridgestats> {
+
+  List<dynamic> contents = [];
+
+  FirebaseFirestore Database = FirebaseFirestore.instance;
+
+  int _selectedIndex = 0;
+
+
+  // gets data on page load
+  Future<void> _getData() async {
+    // get document from database
+    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('sensordata').get();
+    // convert data to a map
+    var data = snapshot.data() as Map;
+    var dataArr = data['items'] as List;
+
+    contents = dataArr;
+
+    //build page with updated values
+    setState(() {
+      contents;
+    });
+  }
+
+  @override
+  void initState() {
+    _getData().then((value){
+      print('Async data load done');
+    });
+    super.initState();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Widget _showgraph(index){
+    switch( index ){
+      case 0:
+        return( Text('${contents[0]["Temperature"]}') );
+        break;
+      case 1:
+        return( Text('${contents[0]["Humidity"]}') );
+        break;
+      case 2:
+        return( Text('${contents[0]["Particle1"]}') );
+        break;
+      default:
+        return( Text('DEFAULT VALUE') );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +169,26 @@ class _fridgestats extends State<fridgestats> {
       appBar: AppBar(
         title: const Text('Fridge Stats'),
       ),
-      body: Center(
-        child: Text('VIEW PICTURE OF stats here'),
+      body: _showgraph(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex, //New
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.thermostat),
+            label: 'Temp',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.water_outlined),
+            label: 'Humidity',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.air),
+            label: 'Particles',
+          ),
+        ],
       ),
+
     );
   }
 

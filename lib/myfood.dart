@@ -10,8 +10,7 @@ import 'package:food_waste/recipiegenerator.dart';
 import 'package:food_waste/wasteawareness.dart';
 import 'package:food_waste/fridgestats.dart';
 
-// firebase and firestore installs
-// import 'package:firebase_core/firebase_core.dart/';
+// firestore installs
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
