@@ -237,9 +237,8 @@ class _shoppinglist extends State<shoppinglist> {
           padding: const EdgeInsets.all(8),
           itemCount: contents.length,
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              color: Colors.greenAccent,
-              child: ListTile(
+            return ListTile(
+                tileColor: Colors.greenAccent,
                 leading: IconButton(
                   onPressed: () => _removeItem(index),
                   icon: const Icon(Icons.check_box_rounded),
@@ -251,8 +250,7 @@ class _shoppinglist extends State<shoppinglist> {
                       Expanded(child: Text(contents[index][1],),),
                     ]
                 ),
-              ),
-            );
+              );
           },
           separatorBuilder: (BuildContext context, int index) => const Divider(),
         ),
