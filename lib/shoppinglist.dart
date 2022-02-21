@@ -238,18 +238,19 @@ class _shoppinglist extends State<shoppinglist> {
           itemCount: contents.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              height: 50,
-              color: Colors.redAccent[100],
-              child: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () => _removeItem(index),
-                      icon: const Icon(Icons.check_box_rounded),
-                    ),
-                    Spacer(),
-                    Expanded(child: Text(contents[index][0],),),
-                    Expanded(child: Text(contents[index][1],),),
-                  ]
+              color: Colors.greenAccent,
+              child: ListTile(
+                leading: IconButton(
+                  onPressed: () => _removeItem(index),
+                  icon: const Icon(Icons.check_box_rounded),
+                ),
+                title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(child: Text(contents[index][0],),),
+                      Expanded(child: Text(contents[index][1],),),
+                    ]
+                ),
               ),
             );
           },
