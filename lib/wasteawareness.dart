@@ -8,6 +8,11 @@ import 'package:food_waste/recipiegenerator.dart';
 import 'package:food_waste/wasteawareness.dart';
 import 'package:food_waste/fridgestats.dart';
 
+
+import 'package:galleryimage/galleryimage.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
+
 class wasteawareness extends StatefulWidget {
   const wasteawareness({Key? key}) : super(key: key);
 
@@ -16,6 +21,8 @@ class wasteawareness extends StatefulWidget {
 }
 
 class _wasteawareness extends State<wasteawareness> {
+
+  List<String> listOfPics= ['assets/images/awareness1.png', 'assets/images/awareness2.png'];
 
   @override
   Widget build(BuildContext context) {
@@ -112,9 +119,23 @@ class _wasteawareness extends State<wasteawareness> {
       appBar: AppBar(
         title: const Text('Food Waste Awareness'),
       ),
-      body: Center(
-        child: Text('VIEW PICTURE OF FOOD WASTE AWARENESS HERE'),
-      ),
+      body: CarouselSlider(
+        options: CarouselOptions(height: 400.0),
+        items: listOfPics.map((i) {
+          return Builder(
+            builder: (BuildContext context) {
+              return Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                  ),
+                  child: Image.asset('$i'),
+              );
+            },
+          );
+        }).toList(),
+      )
     );
   }
 
