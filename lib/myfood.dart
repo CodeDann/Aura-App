@@ -53,15 +53,15 @@ class _myfood extends State<myfood> {
         onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.thermostat),
+            icon: Icon(Icons.data_saver_on_rounded),
             label: 'Fridge Contents',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.water_outlined),
+            icon: Icon(Icons.add_shopping_cart_outlined),
             label: 'Shoppping List',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.air),
+            icon: Icon(Icons.auto_delete_outlined),
             label: 'Wasted Food',
           ),
         ],
