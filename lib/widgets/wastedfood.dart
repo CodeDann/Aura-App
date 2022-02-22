@@ -1,17 +1,6 @@
 import 'package:flutter/material.dart';
 
-// page imports
-import 'package:food_waste/main.dart';
-import 'package:food_waste/viewfridge.dart';
-import 'package:food_waste/widgets/shoppinglist.dart';
-import 'package:food_waste/widgets/wastedfood.dart';
-import 'package:food_waste/myfood.dart';
-import 'package:food_waste/recipiegenerator.dart';
-import 'package:food_waste/wasteawareness.dart';
-import 'package:food_waste/fridgestats.dart';
-
-// firebase and firestore installs
-// import 'package:firebase_core/firebase_core.dart/';
+//other installs
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
