@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -52,6 +54,27 @@ class _tempgraph extends State<tempgraph> {
     });
   }
 
+  double doubleInRange( num start, num end) {
+    var source = new Random();
+    return source.nextDouble() * (end - start) + start;
+  }
+
+  List<FlSpot> _getSpots(){
+    List<FlSpot> spots = [];
+    try{
+      for( int i = 0; i < 7; i++ ){
+        spots.add(FlSpot(i.toDouble(), contents[i]["Temperature"].toDouble()));
+      }
+    }catch(ArrayIndexOutOfBoundsException) {
+      print("Error not enough data to display graph");
+      spots.clear();
+      for( int i = 0; i < 7; i++ ){
+        spots.add(FlSpot(i.toDouble(), doubleInRange(15, 25)));
+      }
+    }
+    return spots;
+  }
+
   @override
   void initState() {
     _getData().then((value){
@@ -59,6 +82,8 @@ class _tempgraph extends State<tempgraph> {
     });
     super.initState();
   }
+
+  LineTitles tempTitles = new LineTitles(0);
 
   @override
   Widget build(BuildContext context) {
@@ -70,10 +95,10 @@ class _tempgraph extends State<tempgraph> {
         child: LineChart(
           LineChartData(
             minX: 0,
-            maxX: 11,
-            minY: 0,
-            maxY: 6,
-            titlesData: LineTitles.getTitleData(),
+            maxX: 6,
+            minY: 10,
+            maxY: 30,
+            titlesData: tempTitles.getTitleData(),
             gridData: FlGridData(
               show: true,
               getDrawingHorizontalLine: (value) {
@@ -96,15 +121,7 @@ class _tempgraph extends State<tempgraph> {
             ),
             lineBarsData: [
               LineChartBarData(
-                spots: [
-                  FlSpot(0, 3),
-                  FlSpot(2.6, 2),
-                  FlSpot(4.9, 5),
-                  FlSpot(6.8, 2.5),
-                  FlSpot(8, 4),
-                  FlSpot(9.5, 3),
-                  FlSpot(11, 4),
-                ],
+                spots: _getSpots(),
                 isCurved: true,
                 colors: gradientColors,
                 barWidth: 5,

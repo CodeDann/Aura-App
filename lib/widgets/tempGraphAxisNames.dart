@@ -1,52 +1,152 @@
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 
 class LineTitles {
-  static getTitleData() => FlTitlesData(
-    show: true,
-    bottomTitles: SideTitles(
-      showTitles: true,
-      reservedSize: 35,
-      getTextStyles: (value) => const TextStyle(
-        color: Color(0xff68737d),
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-      getTitles: (value) {
-        switch (value.toInt()) {
-          case 2:
-            return 'MAR';
-          case 5:
-            return 'JUN';
-          case 8:
-            return 'SEP';
-        }
-        return '';
-      },
-      margin: 8,
-    ),
-    leftTitles: SideTitles(
-      showTitles: true,
-      getTextStyles: (value) => const TextStyle(
-        color: Color(0xff67727d),
-        fontWeight: FontWeight.bold,
-        fontSize: 15,
-      ),
-      getTitles: (value) {
-        switch (value.toInt()) {
-          case 1:
-            return '10k';
-          case 3:
-            return '30k';
-          case 5:
-            return '50k';
-        }
-        return '';
-      },
-      reservedSize: 35,
-      margin: 12,
-    ),
-  );
+
+  LineTitles( this.type );
+
+  int type;
+  //set today
+  late DateTime Today = DateTime.now();
+  //default date formatter for the page
+  DateFormat formatter = DateFormat('E');
+
+
+  String _getDayTitles(index) {
+    switch (index.toInt()) {
+      case 0:
+        return formatter.format(Today.add(Duration(days: -6)));
+      case 1:
+        return formatter.format(Today.add(Duration(days: -5)));
+      case 2:
+        return formatter.format(Today.add(Duration(days: -4)));
+      case 3:
+        return formatter.format(Today.add(Duration(days: -3)));
+      case 4:
+        return formatter.format(Today.add(Duration(days: -2)));
+      case 5:
+        return formatter.format(Today.add(Duration(days: -1)));
+      case 6:
+        return formatter.format(Today);
+    }
+    return '';
+  }
+
+  getTitleData(){
+    if( this.type == 0){
+      return FlTitlesData(
+        show: true,
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 35,
+          getTextStyles: (value) => const TextStyle(
+            color: Color(0xff68737d),
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 0:
+                return formatter.format(Today.add(Duration(days: -6)));
+              case 1:
+                return formatter.format(Today.add(Duration(days: -5)));
+              case 2:
+                return formatter.format(Today.add(Duration(days: -4)));
+              case 3:
+                return formatter.format(Today.add(Duration(days: -3)));
+              case 4:
+                return formatter.format(Today.add(Duration(days: -2)));
+              case 5:
+                return formatter.format(Today.add(Duration(days: -1)));
+              case 6:
+                return formatter.format(Today);
+            }
+            return '';
+          },
+          margin: 8,
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          getTextStyles: (value) => const TextStyle(
+            color: Color(0xff67727d),
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 10:
+                return '10°C';
+              case 15:
+                return '15°C';
+              case 20:
+                return '20°C';
+              case 25:
+                return '25°C';
+              case 30:
+                return '30°C';
+            }
+            return '';
+          },
+          reservedSize: 50,
+          margin: 10,
+        ),
+      );
+    }
+    else if( this.type == 1){
+      return FlTitlesData(
+        show: true,
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 35,
+          getTextStyles: (value) => const TextStyle(
+            color: Color(0xff68737d),
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 0:
+                return formatter.format(Today.add(Duration(days: -6)));
+              case 1:
+                return formatter.format(Today.add(Duration(days: -5)));
+              case 2:
+                return formatter.format(Today.add(Duration(days: -4)));
+              case 3:
+                return formatter.format(Today.add(Duration(days: -3)));
+              case 4:
+                return formatter.format(Today.add(Duration(days: -2)));
+              case 5:
+                return formatter.format(Today.add(Duration(days: -1)));
+              case 6:
+                return formatter.format(Today);
+            }
+            return '';
+          },
+          margin: 8,
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          getTextStyles: (value) => const TextStyle(
+            color: Color(0xff67727d),
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 1:
+                return '10k';
+              case 3:
+                return '30k';
+              case 5:
+                return '50k';
+            }
+            return '';
+          },
+          reservedSize: 35,
+          margin: 12,
+        ),
+      );
+    }
+  }
 }
