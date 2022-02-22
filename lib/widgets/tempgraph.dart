@@ -4,7 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 // widget import
-import 'package:food_waste/widgets/tempGraphAxisNames.dart';
+import 'package:food_waste/widgets/GraphAxisNames.dart';
 
 // firestore installs
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -40,13 +40,7 @@ class _tempgraph extends State<tempgraph> {
     var data = snapshot.data() as Map;
     var dataArr = data['items'] as List;
 
-    // //convert the map from the db into a Array of Maps
-    // for( int i = 0; i < dataArr.length; i++){
-    //   print(dataArr[i]);
-    // }
-    // print(contents);
     contents = dataArr;
-    print(contents);
 
     //build page with updated values
     setState(() {
@@ -61,15 +55,17 @@ class _tempgraph extends State<tempgraph> {
 
   List<FlSpot> _getSpots(){
     List<FlSpot> spots = [];
+    print(contents.length);
     try{
       for( int i = 0; i < 7; i++ ){
-        spots.add(FlSpot(i.toDouble(), contents[i]["Temperature"].toDouble()));
+        spots.add(FlSpot(i.toDouble(), double.parse('${contents[i]["Temperature"]}')));
       }
+      print("Loaded data from database");
     }catch(ArrayIndexOutOfBoundsException) {
       print("Error not enough data to display graph");
       spots.clear();
       for( int i = 0; i < 7; i++ ){
-        spots.add(FlSpot(i.toDouble(), doubleInRange(15, 25)));
+        spots.add(FlSpot(i.toDouble(), doubleInRange(2, 8)));
       }
     }
     return spots;
@@ -83,7 +79,7 @@ class _tempgraph extends State<tempgraph> {
     super.initState();
   }
 
-  LineTitles tempTitles = new LineTitles(0);
+  LineTitles tempTitles = LineTitles(0);
 
   @override
   Widget build(BuildContext context) {
@@ -96,21 +92,21 @@ class _tempgraph extends State<tempgraph> {
           LineChartData(
             minX: 0,
             maxX: 6,
-            minY: 10,
-            maxY: 30,
+            minY: 0,
+            maxY: 10,
             titlesData: tempTitles.getTitleData(),
             gridData: FlGridData(
               show: true,
               getDrawingHorizontalLine: (value) {
                 return FlLine(
-                  color: const Color(0xff37434d),
+                  color: const Color(0xc1c1c1FF),
                   strokeWidth: 1,
                 );
               },
               drawVerticalLine: true,
               getDrawingVerticalLine: (value) {
                 return FlLine(
-                  color: const Color(0xff37434d),
+                  color: const Color(0xc1c1c1FF),
                   strokeWidth: 1,
                 );
               },

@@ -75,16 +75,18 @@ class LineTitles {
           ),
           getTitles: (value) {
             switch (value.toInt()) {
+              case 0:
+                return '0°C';
+              case 2:
+                return '2°C';
+              case 4:
+                return '4°C';
+              case 6:
+                return '6°C';
+              case 8:
+                return '8°C';
               case 10:
                 return '10°C';
-              case 15:
-                return '15°C';
-              case 20:
-                return '20°C';
-              case 25:
-                return '25°C';
-              case 30:
-                return '30°C';
             }
             return '';
           },
