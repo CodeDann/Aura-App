@@ -222,7 +222,7 @@ class _wastedfood extends State<wastedfood> {
     return Scaffold(
         body: ListView.separated(
           padding: const EdgeInsets.all(8),
-          itemCount: contents.length,
+          itemCount: contents.length+1,
           itemBuilder: (BuildContext context, int index) {
             if ( index == 0){
               return ListTile(
