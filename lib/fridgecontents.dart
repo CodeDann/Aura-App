@@ -1,29 +1,18 @@
 import 'package:flutter/material.dart';
 
-// page imports
-import 'package:food_waste/main.dart';
-import 'package:food_waste/viewfridge.dart';
-import 'package:food_waste/shoppinglist.dart';
-import 'package:food_waste/wastedfood.dart';
-import 'package:food_waste/myfood.dart';
-import 'package:food_waste/recipiegenerator.dart';
-import 'package:food_waste/wasteawareness.dart';
-import 'package:food_waste/fridgestats.dart';
-
-// firebase and firestore installs
-// import 'package:firebase_core/firebase_core.dart/';
+// firestore installs
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 
-class wastedfood extends StatefulWidget {
-  const wastedfood({Key? key}) : super(key: key);
+class fridgecontents extends StatefulWidget {
+  const fridgecontents({Key? key}) : super(key: key);
 
   @override
-  State<wastedfood> createState() => _wastedfood();
+  State<fridgecontents> createState() => _fridgecontents();
 }
 
-class _wastedfood extends State<wastedfood> {
+class _fridgecontents extends State<fridgecontents> {
 
   List<dynamic> contents = [];
 
@@ -31,19 +20,19 @@ class _wastedfood extends State<wastedfood> {
 
   late String codeDialog;
   late Map addedItem = {};
-  late DateTime selectedDate = DateTime.now();
+  late DateTime Today = DateTime.now();
+  late DateTime selectedDate = Today.add(Duration(days: 5));
 
   //default date formatter for the page
   DateFormat formatter = DateFormat('yyyy-MM-dd');
 
   TextEditingController _textFieldController1 = TextEditingController();
   TextEditingController _textFieldController2 = TextEditingController();
-  TextEditingController _textFieldController3 = TextEditingController();
 
   // gets data on page load
   Future<void> _getData() async {
     // get document from database
-    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('wastedfood').get();
+    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('fridgecontents').get();
     // convert data to a map
     var data = snapshot.data() as Map;
     var dataArr = data['items'] as List;
@@ -67,7 +56,7 @@ class _wastedfood extends State<wastedfood> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2020),
+      firstDate: Today,
       lastDate: DateTime(2025),
     );
     if (picked != null && picked != selectedDate) {
@@ -96,15 +85,11 @@ class _wastedfood extends State<wastedfood> {
                   ),
                   TextField(
                     controller: _textFieldController2,
-                    decoration: const InputDecoration(hintText: "Reason"),
-                  ),
-                  TextField(
-                    controller: _textFieldController3,
                     decoration: const InputDecoration(hintText: "Quantity"),
                   ),
                   RaisedButton(
                     onPressed: () => _selectDate(context),
-                    child: Text('Select Date'),
+                    child: Text('Select Expiry Date'),
                   ),
                 ],
               ),
@@ -117,7 +102,6 @@ class _wastedfood extends State<wastedfood> {
                     setState(() {
                       _textFieldController1.clear();
                       _textFieldController2.clear();
-                      _textFieldController3.clear();
                       Navigator.pop(context);
                     });
                   },
@@ -129,14 +113,12 @@ class _wastedfood extends State<wastedfood> {
                   onPressed: () {
                     //get the values from both text boxes and call _addItem
                     addedItem['Name'] = _textFieldController1.text;
-                    addedItem['Reason'] = _textFieldController2.text;
-                    addedItem['Quantity'] = _textFieldController3.text;
+                    addedItem['Quantity'] = _textFieldController2.text;
                     _additem(addedItem);
                     addedItem = {};
                     setState(() {
                       _textFieldController1.clear();
                       _textFieldController2.clear();
-                      _textFieldController3.clear();
                       Navigator.pop(context);
                     });
                   },
@@ -162,14 +144,13 @@ class _wastedfood extends State<wastedfood> {
       //asign the correct key value pairs
       map["Date"] = DateTime.parse(contents[i]['Date']);
       map["Name"] = contents[i]['Name'];
-      map["Reason"] = contents[i]['Reason'];
       map["Quantity"] = contents[i]['Quantity'];
       items.add(map);
       map = {};
     }
 
     //sets the entire document contents to map
-    Database.collection('FoodWasteData').doc('wastedfood').set({'items': items});
+    Database.collection('FoodWasteData').doc('fridgecontents').set({'items': items});
 
     //rebuild page with updated contents
     setState(() {
@@ -194,14 +175,13 @@ class _wastedfood extends State<wastedfood> {
       //asign the correct key value pairs
       map["Date"] = DateTime.parse(contents[i]['Date']);
       map["Name"] = contents[i]['Name'];
-      map["Reason"] = contents[i]['Reason'];
       map["Quantity"] = contents[i]['Quantity'];
       items.add(map);
       map = {};
     }
 
     //sets the entire document contents to map
-    Database.collection('FoodWasteData').doc('wastedfood').set({'items': items});
+    Database.collection('FoodWasteData').doc('fridgecontents').set({'items': items});
 
     //rebuild page with updated contents
     setState(() {
@@ -220,77 +200,75 @@ class _wastedfood extends State<wastedfood> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView.separated(
-          padding: const EdgeInsets.all(8),
-          itemCount: contents.length,
-          itemBuilder: (BuildContext context, int index) {
-            if ( index == 0){
-              return ListTile(
-                leading: Visibility(
-                  child: IconButton(
-                    onPressed: null,
-                    icon: const Icon(Icons.check_box_rounded),
-                  ),
-                  visible: false,
-                ),
-                title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(child: Text('Name'),),
-                      Expanded(child: Text('Quantity'),),
-                      Expanded(child: Text('Reason'),),
-                      Expanded(child: Text('Date'),),
-                    ]
-                ),
-              );
-            }// end if
-            index -= 1;
+      body: ListView.separated(
+        padding: const EdgeInsets.all(8),
+        itemCount: contents.length+1,
+        itemBuilder: (BuildContext context, int index) {
+          if ( index == 0){
             return ListTile(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-              tileColor: Colors.greenAccent,
-                leading: IconButton(
-                  onPressed: () => _removeItem(index),
-                  icon: const Icon(Icons.delete_forever),
+              leading: Visibility(
+                child: IconButton(
+                  onPressed: null,
+                  icon: const Icon(Icons.check_box_rounded),
                 ),
-                title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(child: Text(contents[index]['Name'],),),
-                      Expanded(child: Text(contents[index]['Reason'],),),
-                      Expanded(child: Text(contents[index]['Quantity'],),),
-                      Expanded(child: Text(contents[index]['Date'],),),
-                    ]
-                ),
-              );
-          },
-          separatorBuilder: (BuildContext context, int index) => const Divider(),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned(
-              left: 30,
-              bottom: 20,
-              child: FloatingActionButton(
-                heroTag: 'addBtn',
-                onPressed: () {_displayTextInputDialog(context);},
-                tooltip: 'Add an item',
-                child: const Icon(Icons.add),
+                visible: false,
               ),
-            ),
-            Positioned(
-              right: 30,
-              bottom: 20,
-              child: FloatingActionButton(
-                heroTag: 'scanBtn',
-                onPressed: _scanitem,
-                tooltip: 'Scan in a barcode',
-                child: const Icon(Icons.camera_alt_outlined),
+              title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(child: Text('Name'),),
+                    Expanded(child: Text('Quantity'),),
+                    Expanded(child: Text('Date'),),
+                  ]
               ),
+            );
+          }// end if
+          index -= 1;
+          return ListTile(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            tileColor: Colors.greenAccent,
+            leading: IconButton(
+              onPressed: () => _removeItem(index),
+              icon: const Icon(Icons.delete_forever),
             ),
-          ],
-        )
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(child: Text(contents[index]['Name'],),),
+                  Expanded(child: Text(contents[index]['Quantity'],),),
+                  Expanded(child: Text(contents[index]['Date'],),),
+                ]
+            ),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned(
+            left: 30,
+            bottom: 20,
+            child: FloatingActionButton(
+              heroTag: 'addBtn',
+              onPressed: () {_displayTextInputDialog(context);},
+              tooltip: 'Add an item',
+              child: const Icon(Icons.add),
+            ),
+          ),
+          Positioned(
+            right: 30,
+            bottom: 20,
+            child: FloatingActionButton(
+              heroTag: 'scanBtn',
+              onPressed: _scanitem,
+              tooltip: 'Scan in a barcode',
+              child: const Icon(Icons.camera_alt_outlined),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

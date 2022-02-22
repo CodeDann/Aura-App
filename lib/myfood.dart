@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:food_waste/fridgecontents.dart';
 
-// page installs
+//page imports
 import 'package:food_waste/main.dart';
 import 'package:food_waste/viewfridge.dart';
 import 'package:food_waste/shoppinglist.dart';
@@ -24,353 +25,54 @@ class myfood extends StatefulWidget {
 
 class _myfood extends State<myfood> {
 
-  List<dynamic> contents = [];
+  int _selectedIndex = 0;
 
-  FirebaseFirestore Database = FirebaseFirestore.instance;
-
-  late String codeDialog;
-  late Map addedItem = {};
-  late DateTime Today = DateTime.now();
-  late DateTime selectedDate = Today.add(Duration(days: 5));
-
-  //default date formatter for the page
-  DateFormat formatter = DateFormat('yyyy-MM-dd');
-
-  TextEditingController _textFieldController1 = TextEditingController();
-  TextEditingController _textFieldController2 = TextEditingController();
-
-  // gets data on page load
-  Future<void> _getData() async {
-    // get document from database
-    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('fridgecontents').get();
-    // convert data to a map
-    var data = snapshot.data() as Map;
-    var dataArr = data['items'] as List;
-
-    //convert the map from the db into a Array of Maps
-    for( int i = 0; i < dataArr.length; i++){
-      // handle the date and format nicely
-      DateTime date = dataArr[i]['Date'].toDate();
-      String formattedDate = formatter.format(date);
-      dataArr[i]['Date'] = formattedDate;
-    }
-    contents = dataArr;
-
-    //build page with updated values
+  void _onItemTapped(int index) {
     setState(() {
-      contents;
+      _selectedIndex = index;
     });
   }
 
-  _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: Today,
-      lastDate: DateTime(2025),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        addedItem['Date'] = formatter.format(picked);
-      });
+  Widget _showPage(index){
+    switch( index ){
+      case 0:
+        return fridgecontents();
+        break;
+      case 1:
+        return shoppinglist();
+      case 2:
+        return wastedfood();
+        break;
+      default:
+        return fridgecontents();
     }
-  }
-
-
-  // handles the textpopup
-  Future<void> _displayTextInputDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-              title: Text('Add item'),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    controller: _textFieldController1,
-                    decoration: const InputDecoration(hintText: "Item Name"),
-                  ),
-                  TextField(
-                    controller: _textFieldController2,
-                    decoration: const InputDecoration(hintText: "Quantity"),
-                  ),
-                  RaisedButton(
-                    onPressed: () => _selectDate(context),
-                    child: Text('Select Expiry Date'),
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  color: Colors.red,
-                  textColor: Colors.white,
-                  child: Text('Cancel'),
-                  onPressed: () {
-                    setState(() {
-                      _textFieldController1.clear();
-                      _textFieldController2.clear();
-                      Navigator.pop(context);
-                    });
-                  },
-                ),
-                FlatButton(
-                  color: Colors.green,
-                  textColor: Colors.white,
-                  child: Text('Add'),
-                  onPressed: () {
-                    //get the values from both text boxes and call _addItem
-                    addedItem['Name'] = _textFieldController1.text;
-                    addedItem['Quantity'] = _textFieldController2.text;
-                    _additem(addedItem);
-                    addedItem = {};
-                    setState(() {
-                      _textFieldController1.clear();
-                      _textFieldController2.clear();
-                      Navigator.pop(context);
-                    });
-                  },
-                ),
-
-              ],
-            );
-          });
-        });
-  }
-
-  //adds item to contents and db then rebuilds page
-  void _additem(Map item){
-
-    //add to contents
-    contents.add(item);
-
-    //add item to database
-    // create a map with the contents of contents
-    Map<String, dynamic> map = new Map();
-    List<Map> items = [];
-    for( int i = 0; i < contents.length; i++){
-      //asign the correct key value pairs
-      map["Date"] = DateTime.parse(contents[i]['Date']);
-      map["Name"] = contents[i]['Name'];
-      map["Quantity"] = contents[i]['Quantity'];
-      items.add(map);
-      map = {};
-    }
-
-    //sets the entire document contents to map
-    Database.collection('FoodWasteData').doc('fridgecontents').set({'items': items});
-
-    //rebuild page with updated contents
-    setState(() {
-      contents;
-    });
-  }
-
-  void _scanitem(){
-    //open camera and scan in barcode then _additem()
-  }
-
-  //removes item at context[index] from page and db
-  void _removeItem(int index){
-    // remove item from internal contents
-    contents.removeAt(index);
-
-    //remove item from database
-    // create a map with the contents of contents
-    Map<String, dynamic> map = new Map();
-    List<Map> items = [];
-    for( int i = 0; i < contents.length; i++){
-      //asign the correct key value pairs
-      map["Date"] = DateTime.parse(contents[i]['Date']);
-      map["Name"] = contents[i]['Name'];
-      map["Quantity"] = contents[i]['Quantity'];
-      items.add(map);
-      map = {};
-    }
-
-    //sets the entire document contents to map
-    Database.collection('FoodWasteData').doc('fridgecontents').set({'items': items});
-
-    //rebuild page with updated contents
-    setState(() {
-      contents;
-    });
-  }
-
-  @override
-  void initState() {
-    _getData().then((value){
-      print('Async data load done');
-    });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: Drawer(
-          // Add a ListView to the drawer. This ensures the user can scroll
-          // through the options in the drawer if there isn't enough vertical
-          // space to fit everything.
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.deepPurpleAccent,
-                ),
-                child: Text('Menu'),
-              ),
-              ListTile(
-                title: const Text('Homepage'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Homepage')),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('View Fridge'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const viewfridge()),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Shopping List'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const shoppinglist()),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Wasted Food'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const wastedfood()),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Fridge Contents'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const myfood()),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Recipie Generator'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const recipiegenerator()),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Food Waste Awareness'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const wasteawareness()),
-                  );
-                },
-              ),
-              ListTile(
-                title: const Text('Fridge Stats'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const fridgestats()),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
         appBar: AppBar(
-          title: const Text('Fridge Contents'),
+          title: const Text('My Food'),
         ),
-        body: ListView.separated(
-            padding: const EdgeInsets.all(8),
-            itemCount: contents.length+1,
-            itemBuilder: (BuildContext context, int index) {
-              if ( index == 0){
-                return ListTile(
-                  leading: Visibility(
-                    child: IconButton(
-                      onPressed: null,
-                      icon: const Icon(Icons.check_box_rounded),
-                    ),
-                    visible: false,
-                  ),
-                  title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(child: Text('Name'),),
-                        Expanded(child: Text('Quantity'),),
-                        Expanded(child: Text('Date'),),
-                      ]
-                  ),
-                );
-              }// end if
-              index -= 1;
-              return ListTile(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                tileColor: Colors.greenAccent,
-                leading: IconButton(
-                  onPressed: () => _removeItem(index),
-                  icon: const Icon(Icons.delete_forever),
-                ),
-                title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(child: Text(contents[index]['Name'],),),
-                      Expanded(child: Text(contents[index]['Quantity'],),),
-                      Expanded(child: Text(contents[index]['Date'],),),
-                    ]
-                ),
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) => const Divider(),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned(
-              left: 30,
-              bottom: 20,
-              child: FloatingActionButton(
-                heroTag: 'addBtn',
-                onPressed: () {_displayTextInputDialog(context);},
-                tooltip: 'Add an item',
-                child: const Icon(Icons.add),
-              ),
-            ),
-            Positioned(
-              right: 30,
-              bottom: 20,
-              child: FloatingActionButton(
-                heroTag: 'scanBtn',
-                onPressed: _scanitem,
-                tooltip: 'Scan in a barcode',
-                child: const Icon(Icons.camera_alt_outlined),
-              ),
-            ),
-          ],
-        )
+        body: _showPage(_selectedIndex),
+        bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex, //New
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.thermostat),
+            label: 'Fridge Contents',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.water_outlined),
+            label: 'Shoppping List',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.air),
+            label: 'Wasted Food',
+          ),
+        ],
+      ),
     );
   }
 }
