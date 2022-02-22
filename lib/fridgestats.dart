@@ -28,8 +28,7 @@ class _fridgestats extends State<fridgestats> {
   Widget _showGraph(index){
     switch( index ){
       case 0:
-        // return tempgraph();
-        return Text('text');
+        return(tempgraph());
         break;
       case 1:
         // return pressuregraph();
