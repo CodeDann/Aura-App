@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:food_waste/fridgecontents.dart';
 
-//page imports
-import 'package:food_waste/main.dart';
-import 'package:food_waste/viewfridge.dart';
-import 'package:food_waste/shoppinglist.dart';
-import 'package:food_waste/wastedfood.dart';
-import 'package:food_waste/myfood.dart';
-import 'package:food_waste/recipiegenerator.dart';
-import 'package:food_waste/wasteawareness.dart';
-import 'package:food_waste/fridgestats.dart';
 
-// firestore installs
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
+//widget imports
+import 'package:food_waste/widgets/navdrawer.dart';
+import 'package:food_waste/widgets/shoppinglist.dart';
+import 'package:food_waste/widgets/wastedfood.dart';
+import 'package:food_waste/widgets/fridgecontents.dart';
 
 
 class myfood extends StatefulWidget {
@@ -54,6 +46,7 @@ class _myfood extends State<myfood> {
         appBar: AppBar(
           title: const Text('My Food'),
         ),
+        drawer: navdrawer(),
         body: _showPage(_selectedIndex),
         bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex, //New
