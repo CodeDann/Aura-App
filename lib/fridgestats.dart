@@ -52,6 +52,7 @@ class _fridgestats extends State<fridgestats> {
       ),
       body: _showGraph(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex, //New
         onTap: _onItemTapped,
         items: const <BottomNavigationBarItem>[
@@ -60,12 +61,16 @@ class _fridgestats extends State<fridgestats> {
             label: 'Temp',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.water_outlined),
-            label: 'Humidity',
+            icon: Icon(Icons.sensors_rounded),
+            label: 'Humid & Press',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.blur_on_sharp),
+            label: 'Particles',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.air),
-            label: 'Particles',
+            label: 'Gasses',
           ),
         ],
       ),
