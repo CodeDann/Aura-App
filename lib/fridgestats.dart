@@ -32,10 +32,10 @@ class _fridgestats extends State<fridgestats> {
         break;
       case 1:
         // return pressuregraph();
-        return Text('text');
+        return(pressuregraph());
       case 2:
         // return particlegraph();
-        return Text('text');
+        return (particlegraph());
         break;
       default:
         // return tempgraph();

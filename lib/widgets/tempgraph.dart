@@ -28,8 +28,8 @@ class _tempgraph extends State<tempgraph> {
 
   //graphing variables
   final List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a),
+    const Color.fromRGBO(200, 0, 0, 0.8),
+    const Color.fromRGBO(200, 100, 50, 0.8),
   ];
 
   // gets data on page load
