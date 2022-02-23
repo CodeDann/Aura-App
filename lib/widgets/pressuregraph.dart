@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_titled_container/flutter_titled_container.dart';
 
 // widget import
 import 'package:food_waste/widgets/GraphAxisNames.dart';
@@ -25,6 +26,9 @@ class _pressuregraph extends State<pressuregraph> {
   late DateTime Today = DateTime.now();
   //default date formatter for the page
   DateFormat formatter = DateFormat('yyyy-MM-dd');
+
+  LineTitles humidityxy = LineTitles(1);
+  LineTitles pressurexy = LineTitles(2);
 
   //graphing variables
   final List<Color> gradientColors = [
@@ -88,89 +92,119 @@ class _pressuregraph extends State<pressuregraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
+      padding: EdgeInsets.fromLTRB(0, 40, 20, 0),
       child: Column(
         children: [
-          Container(
-            width:(MediaQuery.of(context).size.width),
-            height: 20,
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(child: TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(fillColor: gradientColors[0], filled: true, labelText: 'Humidity'),
+          //Humidity graph
+          TitledContainer(
+            titleColor: gradientColors[0],
+            title: 'Humidity',
+            textAlign: TextAlignTitledContainer.Center,
+            backgroundColor: Colors.white30,
+            child:Container(
+              width: (MediaQuery.of(context).size.width),
+              height: ((MediaQuery.of(context).size.height)/3),
+              padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
+              child: LineChart(
+                LineChartData(
+                  minX: 0,
+                  maxX: 6,
+                  minY: 0,
+                  maxY: 50,
+                  titlesData: humidityxy.getTitleData(),
+                  gridData: FlGridData(
+                    show: true,
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: const Color(0xc1c1c1FF),
+                        strokeWidth: 1,
+                      );
+                    },
+                    drawVerticalLine: true,
+                    getDrawingVerticalLine: (value) {
+                      return FlLine(
+                        color: const Color(0xc1c1c1FF),
+                        strokeWidth: 1,
+                      );
+                    },
                   ),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border.all(color: const Color(0xff37434d), width: 1),
+                  ),
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: _getSpots('Oxidation'),
+                      isCurved: true,
+                      colors: gradientColors,
+                      barWidth: 5,
+                      // dotData: FlDotData(show: false),
+                      belowBarData: BarAreaData(
+                        show: true,
+                        colors: gradientColors
+                            .map((color) => color.withOpacity(0.3))
+                            .toList(),
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(child: TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(fillColor: gradientColors2[0], filled: true, labelText: 'Pressure'),
-                ),
-                ),
-              ],
+              ),
             ),
           ),
-
-          Container(
-            width: (MediaQuery.of(context).size.width),
-            height: ((MediaQuery.of(context).size.height) - 200),
-            padding: EdgeInsets.fromLTRB(0, 20, 20, 0),
-            child: LineChart(
-              LineChartData(
-                minX: 0,
-                maxX: 6,
-                minY: 0,
-                maxY: 10,
-                titlesData: tempTitles.getTitleData(),
-                gridData: FlGridData(
-                  show: true,
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: const Color(0xc1c1c1FF),
-                      strokeWidth: 1,
-                    );
-                  },
-                  drawVerticalLine: true,
-                  getDrawingVerticalLine: (value) {
-                    return FlLine(
-                      color: const Color(0xc1c1c1FF),
-                      strokeWidth: 1,
-                    );
-                  },
-                ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(color: const Color(0xff37434d), width: 1),
-                ),
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: _getSpots("Pressure"),
-                    isCurved: true,
-                    colors: gradientColors,
-                    barWidth: 5,
-                    // dotData: FlDotData(show: false),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      colors: gradientColors
-                          .map((color) => color.withOpacity(0.3))
-                          .toList(),
-                    ),
+          //Pressure graph
+          TitledContainer(
+            titleColor: gradientColors2[0],
+            title: 'Pressure',
+            textAlign: TextAlignTitledContainer.Center,
+            backgroundColor: Colors.white30,
+            child:Container(
+              width: (MediaQuery.of(context).size.width),
+              height: ((MediaQuery.of(context).size.height)/3),
+              padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
+              child: LineChart(
+                LineChartData(
+                  minX: 0,
+                  maxX: 6,
+                  minY: 0,
+                  maxY: 1500,
+                  titlesData: pressurexy.getTitleData(),
+                  gridData: FlGridData(
+                    show: true,
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: const Color(0xc1c1c1FF),
+                        strokeWidth: 1,
+                      );
+                    },
+                    drawVerticalLine: true,
+                    getDrawingVerticalLine: (value) {
+                      return FlLine(
+                        color: const Color(0xc1c1c1FF),
+                        strokeWidth: 1,
+                      );
+                    },
                   ),
-                  LineChartBarData(
-                    spots: _getSpots("Humidity"),
-                    isCurved: true,
-                    colors: gradientColors2,
-                    barWidth: 5,
-                    // dotData: FlDotData(show: false),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      colors: gradientColors2
-                          .map((color) => color.withOpacity(0.3))
-                          .toList(),
-                    ),
+                  borderData: FlBorderData(
+                    show: true,
+                    border: Border.all(color: const Color(0xff37434d), width: 1),
                   ),
-                ],
+                  lineBarsData: [
+                    LineChartBarData(
+                      spots: _getSpots("Pressure"),
+                      isCurved: true,
+                      colors: gradientColors2,
+                      barWidth: 5,
+                      // dotData: FlDotData(show: false),
+                      belowBarData: BarAreaData(
+                        show: true,
+                        colors: gradientColors2
+                            .map((color) => color.withOpacity(0.3))
+                            .toList(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

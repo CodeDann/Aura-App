@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_titled_container/flutter_titled_container.dart';
 
 // widget import
 import 'package:food_waste/widgets/GraphAxisNames.dart';
@@ -65,7 +66,7 @@ class _tempgraph extends State<tempgraph> {
       print("Error not enough data to display graph");
       spots.clear();
       for( int i = 0; i < 7; i++ ){
-        spots.add(FlSpot(i.toDouble(), doubleInRange(2, 8)));
+        spots.add(FlSpot(i.toDouble(), doubleInRange(2, 22)));
       }
     }
     return spots;
@@ -83,56 +84,63 @@ class _tempgraph extends State<tempgraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: (MediaQuery.of(context).size.width),
-        height: (MediaQuery.of(context).size.height),
-        padding: EdgeInsets.fromLTRB(0, 20, 20, 0),
-        child: LineChart(
-          LineChartData(
-            minX: 0,
-            maxX: 6,
-            minY: 0,
-            maxY: 10,
-            titlesData: tempTitles.getTitleData(),
-            gridData: FlGridData(
-              show: true,
-              getDrawingHorizontalLine: (value) {
-                return FlLine(
-                  color: const Color(0xc1c1c1FF),
-                  strokeWidth: 1,
-                );
-              },
-              drawVerticalLine: true,
-              getDrawingVerticalLine: (value) {
-                return FlLine(
-                  color: const Color(0xc1c1c1FF),
-                  strokeWidth: 1,
-                );
-              },
-            ),
-            borderData: FlBorderData(
-              show: true,
-              border: Border.all(color: const Color(0xff37434d), width: 1),
-            ),
-            lineBarsData: [
-              LineChartBarData(
-                spots: _getSpots(),
-                isCurved: true,
-                colors: gradientColors,
-                barWidth: 5,
-                // dotData: FlDotData(show: false),
-                belowBarData: BarAreaData(
-                  show: true,
-                  colors: gradientColors
-                      .map((color) => color.withOpacity(0.3))
-                      .toList(),
-                ),
+    return Container(
+      padding: EdgeInsets.fromLTRB(0, 40, 20, 0),
+      child: TitledContainer(
+        titleColor: gradientColors[0],
+        title: 'Temperature',
+        textAlign: TextAlignTitledContainer.Center,
+        backgroundColor: Colors.white30,
+        child: Container(
+          width: (MediaQuery.of(context).size.width),
+          height: (MediaQuery.of(context).size.height),
+          padding: EdgeInsets.fromLTRB(0, 20, 20, 0),
+          child: LineChart(
+            LineChartData(
+              minX: 0,
+              maxX: 6,
+              minY: 0,
+              maxY: 25,
+              titlesData: tempTitles.getTitleData(),
+              gridData: FlGridData(
+                show: true,
+                getDrawingHorizontalLine: (value) {
+                  return FlLine(
+                    color: const Color(0xc1c1c1FF),
+                    strokeWidth: 1,
+                  );
+                },
+                drawVerticalLine: true,
+                getDrawingVerticalLine: (value) {
+                  return FlLine(
+                    color: const Color(0xc1c1c1FF),
+                    strokeWidth: 1,
+                  );
+                },
               ),
-            ],
+              borderData: FlBorderData(
+                show: true,
+                border: Border.all(color: const Color(0xff37434d), width: 1),
+              ),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: _getSpots(),
+                  isCurved: true,
+                  colors: gradientColors,
+                  barWidth: 5,
+                  // dotData: FlDotData(show: false),
+                  belowBarData: BarAreaData(
+                    show: true,
+                    colors: gradientColors
+                        .map((color) => color.withOpacity(0.3))
+                        .toList(),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      )
     );
   }
 }

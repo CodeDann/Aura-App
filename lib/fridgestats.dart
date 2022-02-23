@@ -5,6 +5,7 @@ import 'package:food_waste/widgets/navdrawer.dart';
 import 'package:food_waste/widgets/tempgraph.dart';
 import 'package:food_waste/widgets/pressuregraph.dart';
 import 'package:food_waste/widgets/particlegraph.dart';
+import 'package:food_waste/widgets/gassgraph.dart';
 
 
 class fridgestats extends StatefulWidget {
@@ -31,12 +32,12 @@ class _fridgestats extends State<fridgestats> {
         return(tempgraph());
         break;
       case 1:
-        // return pressuregraph();
         return(pressuregraph());
       case 2:
-        // return particlegraph();
         return (particlegraph());
         break;
+      case 3:
+        return (gassgraph());
       default:
         // return tempgraph();
         return Text('text');

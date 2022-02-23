@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_titled_container/flutter_titled_container.dart';
 
 // widget import
 import 'package:food_waste/widgets/GraphAxisNames.dart';
@@ -9,7 +10,6 @@ import 'package:food_waste/widgets/GraphAxisNames.dart';
 // firestore installs
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-
 
 class particlegraph extends StatefulWidget {
   const particlegraph({Key? key}) : super(key: key);
@@ -19,12 +19,13 @@ class particlegraph extends StatefulWidget {
 }
 
 class _particlegraph extends State<particlegraph> {
-
   List<dynamic> contents = [];
   FirebaseFirestore Database = FirebaseFirestore.instance;
   late DateTime Today = DateTime.now();
   //default date formatter for the page
   DateFormat formatter = DateFormat('yyyy-MM-dd');
+
+  LineTitles particlexy = LineTitles(3);
 
   //graphing variables
   final List<Color> gradientColors1 = [
@@ -45,7 +46,8 @@ class _particlegraph extends State<particlegraph> {
   // gets data on page load
   Future<void> _getData() async {
     // get document from database
-    DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('sensordata').get();
+    DocumentSnapshot snapshot =
+        await Database.collection('FoodWasteData').doc('sensordata').get();
     // convert data to a map
     var data = snapshot.data() as Map;
     var dataArr = data['items'] as List;
@@ -58,23 +60,23 @@ class _particlegraph extends State<particlegraph> {
     });
   }
 
-  double doubleInRange( num start, num end) {
+  double doubleInRange(num start, num end) {
     var source = new Random();
     return source.nextDouble() * (end - start) + start;
   }
 
-  List<FlSpot> _getSpots(String Name){
+  List<FlSpot> _getSpots(String Name) {
     List<FlSpot> spots = [];
     print(contents.length);
-    try{
-      for( int i = 0; i < 7; i++ ){
+    try {
+      for (int i = 0; i < 7; i++) {
         spots.add(FlSpot(i.toDouble(), double.parse('${contents[i][Name]}')));
       }
       print("Loaded data from database");
-    }catch(ArrayIndexOutOfBoundsException) {
+    } catch (ArrayIndexOutOfBoundsException) {
       print("Error not enough data to display graph");
       spots.clear();
-      for( int i = 0; i < 7; i++ ){
+      for (int i = 0; i < 7; i++) {
         spots.add(FlSpot(i.toDouble(), doubleInRange(2, 8)));
       }
     }
@@ -83,7 +85,7 @@ class _particlegraph extends State<particlegraph> {
 
   @override
   void initState() {
-    _getData().then((value){
+    _getData().then((value) {
       print('Async data load done');
     });
     super.initState();
@@ -93,46 +95,40 @@ class _particlegraph extends State<particlegraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
       child: Column(
         children: [
           Container(
-            width:(MediaQuery.of(context).size.width),
-            height: 20,
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(child: TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(fillColor: gradientColors1[0], filled: true, labelText: 'Particle1'),
-                ),
-                ),
-                Expanded(child: TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(fillColor: gradientColors2[0], filled: true, labelText: 'Particle10'),
-                ),
-                ),
-                Expanded(child: TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(fillColor: gradientColors3[0], filled: true, labelText: 'Particle20'),
-                ),
-                ),
-              ],
+            padding: EdgeInsets.fromLTRB(0, 20, 40, 0),
+            child: RichText(
+              textAlign: TextAlign.justify,
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                      text: 'Particle1   ',
+                      style: TextStyle(color: gradientColors1[0])),
+                  TextSpan(
+                      text: 'Particle10   ',
+                      style: TextStyle(color: gradientColors2[0])),
+                  TextSpan(
+                      text: 'Particle25',
+                      style: TextStyle(color: gradientColors3[1])),
+                ],
+              ),
             ),
           ),
-
+          //particle graph container
           Container(
             width: (MediaQuery.of(context).size.width),
-            height: ((MediaQuery.of(context).size.height) - 200),
-            padding: EdgeInsets.fromLTRB(0, 20, 20, 0),
+            height: (MediaQuery.of(context).size.height)/1.5,
+            padding: EdgeInsets.fromLTRB(0, 20, 40, 0),
             child: LineChart(
               LineChartData(
                 minX: 0,
                 maxX: 6,
                 minY: 0,
                 maxY: 10,
-                titlesData: tempTitles.getTitleData(),
+                titlesData: particlexy.getTitleData(),
                 gridData: FlGridData(
                   show: true,
                   getDrawingHorizontalLine: (value) {
@@ -202,4 +198,3 @@ class _particlegraph extends State<particlegraph> {
     );
   }
 }
-
