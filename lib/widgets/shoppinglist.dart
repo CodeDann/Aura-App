@@ -77,7 +77,11 @@ class _shoppinglist extends State<shoppinglist> {
       else{
         List<String> itemToAdd = [];
         itemToAdd.add(scannedProduct.productName.toString());
-        itemToAdd.add(scannedProduct.quantity.toString());
+        if( scannedProduct.quantity.toString() == 'null' ){
+          itemToAdd.add("1 Item");
+        } else{
+          itemToAdd.add(scannedProduct.quantity.toString());
+        }
         _additem(itemToAdd);
       }
     });
