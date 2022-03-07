@@ -98,10 +98,10 @@ class _pressuregraph extends State<pressuregraph> {
         children: [
           //Humidity graph
           TitledContainer(
-            titleColor: gradientColors[0],
+            titleColor: Colors.white,
             title: 'Humidity',
             textAlign: TextAlignTitledContainer.Center,
-            backgroundColor: Colors.white30,
+            backgroundColor: gradientColors[1],
             child:Container(
               width: (MediaQuery.of(context).size.width),
               height: ((MediaQuery.of(context).size.height)/3),
@@ -154,10 +154,10 @@ class _pressuregraph extends State<pressuregraph> {
           ),
           //Pressure graph
           TitledContainer(
-            titleColor: gradientColors2[0],
+            titleColor: Colors.white,
             title: 'Pressure',
             textAlign: TextAlignTitledContainer.Center,
-            backgroundColor: Colors.white30,
+            backgroundColor: gradientColors2[1],
             child:Container(
               width: (MediaQuery.of(context).size.width),
               height: ((MediaQuery.of(context).size.height)/3),

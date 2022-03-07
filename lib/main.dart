@@ -27,7 +27,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Food Waste App',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        // scaffoldBackgroundColor: Colors.black26,
+        // colorScheme: ColorScheme.dark(),
+        // primaryColorDark: Colors.deepPurple,
+        // appBarTheme: AppBarTheme(
+        //   backgroundColor: Colors.black45,
+        // ),
+        // primaryColor: Colors.deepPurple,
+          colorScheme: const ColorScheme(
+            brightness: Brightness.dark,
+
+            background: Colors.black38,
+            primary: Colors.deepPurple,
+
+            onPrimary: Colors.black,
+            onBackground: Colors.black,
+
+            secondary: Colors.deepPurple, //float action button
+            onSecondary: Colors.white,
+
+            error: Colors.black,
+            onError: Colors.white,
+
+            surface: Colors.deepPurple, // AppBar
+            onSurface: Colors.white, //icons, inputs
+          ),
       ),
       home: const MyHomePage(title: 'Dashboard'),
     );
@@ -110,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(200, 0, 0, 0.8),
+                      color: Color.fromRGBO(200, 0, 0, 0.6),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,
@@ -136,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(151, 5, 255, 0.8),
+                      color: Color.fromRGBO(151, 5, 255, 0.6),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,
@@ -159,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Color(0xff23b6e6),
+                      color: const Color.fromRGBO(43, 209, 255, 0.6),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,
@@ -182,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(200, 120, 0, 0.8),
+                      color: const Color.fromRGBO(255, 242, 64, 0.6),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,
@@ -208,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(100, 255, 0, 0.8),
+                      color: const Color.fromRGBO(100, 255, 0, 0.6),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,

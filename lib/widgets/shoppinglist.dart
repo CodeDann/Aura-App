@@ -247,7 +247,7 @@ class _shoppinglist extends State<shoppinglist> {
             index -= 1;
             return ListTile(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                tileColor: Colors.greenAccent,
+                tileColor: Colors.indigoAccent,
                 leading: IconButton(
                   onPressed: () => _removeItem(index),
                   icon: const Icon(Icons.check_box_rounded),

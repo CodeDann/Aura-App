@@ -186,7 +186,7 @@ class _recipiegenerator extends State<recipiegenerator> {
             index -= 1;
             return ListTile(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-              tileColor: Colors.greenAccent,
+              tileColor: Colors.indigoAccent,
               leading: IconButton(
                 onPressed: () => _removeItem(index),
                 icon: const Icon(Icons.delete_forever),
@@ -221,7 +221,7 @@ class _recipiegenerator extends State<recipiegenerator> {
               bottom: 20,
               child: RaisedButton(
                 color: Colors.deepPurple,
-                textColor: Colors.greenAccent,
+                textColor: Colors.white,
                 onPressed: () {_displayImage(context);},
                 child: Text('Generate a Recipie'),
               ),

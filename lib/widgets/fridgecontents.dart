@@ -276,7 +276,7 @@ class _fridgecontents extends State<fridgecontents> {
           index -= 1;
           return ListTile(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-            tileColor: Colors.greenAccent,
+            tileColor: Colors.indigoAccent,
             leading: IconButton(
               onPressed: () => _removeItem(index),
               icon: const Icon(Icons.delete_forever),

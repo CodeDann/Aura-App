@@ -103,10 +103,10 @@ class _gassgraph extends State<gassgraph> {
         children: [
           //oxidation graph
           TitledContainer(
-            titleColor: gradientColors1[0],
+            titleColor: Colors.white,
             title: 'Oxidation',
             textAlign: TextAlignTitledContainer.Center,
-            backgroundColor: Colors.white30,
+            backgroundColor: gradientColors1[1],
             child:Container(
               width: (MediaQuery.of(context).size.width),
               height: (MediaQuery.of(context).size.height)/4,
@@ -159,10 +159,10 @@ class _gassgraph extends State<gassgraph> {
           ),
           //Reduction graph
           TitledContainer(
-            titleColor: gradientColors2[0],
+            titleColor: Colors.white,
             title: 'Reduction',
             textAlign: TextAlignTitledContainer.Center,
-            backgroundColor: Colors.white30,
+            backgroundColor: gradientColors2[0],
             child:Container(
               width: (MediaQuery.of(context).size.width),
               height: (MediaQuery.of(context).size.height)/4,
@@ -215,9 +215,9 @@ class _gassgraph extends State<gassgraph> {
           ),
           //ammonia graph
           TitledContainer(
-            titleColor: gradientColors3[0],
+            titleColor: Colors.white,
             title: 'Ammonia',
-            backgroundColor: Colors.white30,
+            backgroundColor: gradientColors3[0],
             textAlign: TextAlignTitledContainer.Center,
             child:Container(
               width: (MediaQuery.of(context).size.width),

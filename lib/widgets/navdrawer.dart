@@ -28,7 +28,7 @@ class _navdrawer extends State<navdrawer> {
             decoration: BoxDecoration(
               color: Colors.deepPurpleAccent,
             ),
-            child: Text('Menu'),
+            child: Text(''),
           ),
           ListTile(
             title: const Text('Dashboard'),

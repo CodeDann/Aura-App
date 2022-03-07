@@ -34,7 +34,7 @@ class _wasteawareness extends State<wasteawareness> {
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.symmetric(horizontal: 5.0),
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.black12,
                   ),
                   child: Image.asset('$i'),
               );

@@ -39,8 +39,8 @@ class _particlegraph extends State<particlegraph> {
   ];
   //graphing variables
   final List<Color> gradientColors3 = [
-    const Color.fromRGBO(176, 165, 176, 0.8),
-    const Color.fromRGBO(82, 77, 82, 0.8),
+    const Color.fromRGBO(240, 240, 240, 0.8),
+    const Color.fromRGBO(173, 173, 173, 0.8),
   ];
 
   // gets data on page load
