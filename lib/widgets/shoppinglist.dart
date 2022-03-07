@@ -1,19 +1,13 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
 
-//page imports
-import 'package:food_waste/main.dart';
-import 'package:food_waste/viewfridge.dart';
-import 'package:food_waste/widgets/shoppinglist.dart';
-import 'package:food_waste/widgets/wastedfood.dart';
-import 'package:food_waste/myfood.dart';
-import 'package:food_waste/recipiegenerator.dart';
-import 'package:food_waste/wasteawareness.dart';
-import 'package:food_waste/fridgestats.dart';
-// firebase and firestore installs
-// import 'package:firebase_core/firebase_core.dart/';
+// other imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:openfoodfacts/openfoodfacts.dart';
 
 
 class shoppinglist extends StatefulWidget {
@@ -51,13 +45,57 @@ class _shoppinglist extends State<shoppinglist> {
       item.add(dataArr[i]['Quantity']);
       items.add(item);
     }
-    print(items);
     contents = items;
 
     //build page with updated values
     setState(() {
       contents;
     });
+  }
+
+  Future<void> _scanBarcode() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    //Need to make this a flash popup on the screen not a console print
+    getProduct(barcodeScanRes).then((scannedProduct){
+      if ( scannedProduct == null ){
+        print("Error no data for this barcode in the database");
+      }
+      else{
+        List<String> itemToAdd = [];
+        itemToAdd.add(scannedProduct.productName.toString());
+        itemToAdd.add(scannedProduct.quantity.toString());
+        _additem(itemToAdd);
+      }
+    });
+
+  }
+
+  Future<Product?> getProduct(String scannedBarcode) async {
+    var barcode = scannedBarcode;
+
+    ProductQueryConfiguration configuration = ProductQueryConfiguration(barcode,
+        language: OpenFoodFactsLanguage.ENGLISH, fields: [ProductField.ALL]);
+    ProductResult result = await OpenFoodAPIClient.getProduct(configuration);
+
+    if (result.status == 1) {
+      return result.product;
+    } else {
+      return null;
+    }
   }
 
   // handles the textpopup
@@ -141,10 +179,6 @@ class _shoppinglist extends State<shoppinglist> {
     setState(() {
       contents;
     });
-  }
-
-  void _scanitem(){
-    //open camera and scan in barcode then _additem()
   }
 
   //removes item at context[index] from page and db
@@ -244,7 +278,7 @@ class _shoppinglist extends State<shoppinglist> {
               bottom: 20,
               child: FloatingActionButton(
                 heroTag: 'scanBtn',
-                onPressed: _scanitem,
+                onPressed: _scanBarcode,
                 tooltip: 'Scan in a barcode',
                 child: const Icon(Icons.camera_alt_outlined),
               ),
