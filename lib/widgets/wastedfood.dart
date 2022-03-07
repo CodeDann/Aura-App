@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 //other installs
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:openfoodfacts/openfoodfacts.dart';
 
 class wastedfood extends StatefulWidget {
   const wastedfood({Key? key}) : super(key: key);
@@ -137,6 +139,59 @@ class _wastedfood extends State<wastedfood> {
         });
   }
 
+  //opens camera and scans a barcode
+  Future<void> _scanBarcode() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    //Need to make this a flash popup on the screen not a console print
+    getProduct(barcodeScanRes).then((scannedProduct){
+      if ( scannedProduct == null ){
+        print("Error no data for this barcode in the database");
+      }
+      else{
+        Map itemToAdd = {};
+        itemToAdd['Date'] = formatter.format(selectedDate).toString();
+        itemToAdd['Reason'] = "None";
+        itemToAdd['Name'] = scannedProduct.productName.toString();
+        if( scannedProduct.quantity.toString() == 'null' ){
+          itemToAdd['Quantity'] = "1 Item";
+        } else{
+          itemToAdd['Quantity'] = scannedProduct.quantity.toString();
+        }
+        _additem(itemToAdd);
+      }
+    });
+
+  }
+
+  //returns product info about a barcode
+  Future<Product?> getProduct(String scannedBarcode) async {
+    var barcode = scannedBarcode;
+
+    ProductQueryConfiguration configuration = ProductQueryConfiguration(barcode,
+        language: OpenFoodFactsLanguage.ENGLISH, fields: [ProductField.ALL]);
+    ProductResult result = await OpenFoodAPIClient.getProduct(configuration);
+
+    if (result.status == 1) {
+      return result.product;
+    } else {
+      return null;
+    }
+  }
+
   //adds item to contents and db then rebuilds page
   void _additem(Map item){
 
@@ -164,10 +219,6 @@ class _wastedfood extends State<wastedfood> {
     setState(() {
       contents;
     });
-  }
-
-  void _scanitem(){
-    //open camera and scan in barcode then _additem()
   }
 
   //removes item at context[index] from page and db
@@ -226,8 +277,8 @@ class _wastedfood extends State<wastedfood> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(child: Text('Name'),),
-                      Expanded(child: Text('Quantity'),),
                       Expanded(child: Text('Reason'),),
+                      Expanded(child: Text('Quantity'),),
                       Expanded(child: Text('Date'),),
                     ]
                 ),
@@ -273,7 +324,7 @@ class _wastedfood extends State<wastedfood> {
               bottom: 20,
               child: FloatingActionButton(
                 heroTag: 'scanBtn',
-                onPressed: _scanitem,
+                onPressed: _scanBarcode,
                 tooltip: 'Scan in a barcode',
                 child: const Icon(Icons.camera_alt_outlined),
               ),
