@@ -19,8 +19,14 @@ class _viewfridge extends State<viewfridge> {
         appBar: AppBar(
           title: const Text('View Fridge'),
         ),
-        body: Center(
-          child: Text('VIEW PICTURE OF FRIDGE'),
+        body: Scaffold(
+          body: Image.asset(
+          'assets/images/fridgepic.jpeg',
+          fit: BoxFit.cover,
+          height: double.infinity,
+          width: double.infinity,
+          alignment: Alignment.center,
+          ),
         ),
     );
   }
