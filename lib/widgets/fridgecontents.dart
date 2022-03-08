@@ -158,11 +158,12 @@ class _fridgecontents extends State<fridgecontents> {
         Map itemToAdd = {};
         itemToAdd['Date'] = formatter.format(selectedDate).toString();
         itemToAdd['Name'] = scannedProduct.productName.toString();
-        if( scannedProduct.quantity.toString() == 'null' ){
+        if( scannedProduct.quantity == null ){
           itemToAdd['Quantity'] = "1 Item";
         } else{
           itemToAdd['Quantity'] = scannedProduct.quantity.toString();
         }
+        print(itemToAdd['Quantity']);
         _additem(itemToAdd);
       }
     });

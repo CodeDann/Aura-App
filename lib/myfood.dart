@@ -24,7 +24,7 @@ class _myfood extends State<myfood> {
       _selectedIndex = index;
     });
   }
-
+  //TODO Error when adding new item as if you lick add without filling out fields it correctly stops you from adding the item. However when you finally add it it adds how many times u clicked the icon
   Widget _showPage(index){
     switch( index ){
       case 0:

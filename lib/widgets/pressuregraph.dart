@@ -98,8 +98,9 @@ class _pressuregraph extends State<pressuregraph> {
         children: [
           //Humidity graph
           TitledContainer(
-            titleColor: Colors.white,
+            titleColor: Colors.black,
             title: 'Humidity',
+            fontSize: 15.0,
             textAlign: TextAlignTitledContainer.Center,
             backgroundColor: gradientColors[1],
             child:Container(
@@ -154,8 +155,9 @@ class _pressuregraph extends State<pressuregraph> {
           ),
           //Pressure graph
           TitledContainer(
-            titleColor: Colors.white,
+            titleColor: Colors.black,
             title: 'Pressure',
+            fontSize: 15.0,
             textAlign: TextAlignTitledContainer.Center,
             backgroundColor: gradientColors2[1],
             child:Container(

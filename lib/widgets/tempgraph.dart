@@ -87,8 +87,9 @@ class _tempgraph extends State<tempgraph> {
     return Container(
       padding: EdgeInsets.fromLTRB(0, 40, 20, 0),
       child: TitledContainer(
-        titleColor: Colors.white,
+        titleColor: Colors.black,
         title: 'Temperature',
+        fontSize: 20.0,
         textAlign: TextAlignTitledContainer.Center,
         backgroundColor: gradientColors[0],
         child: Container(
