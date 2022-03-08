@@ -89,7 +89,7 @@ class _tempgraph extends State<tempgraph> {
       child: TitledContainer(
         titleColor: Colors.black,
         title: 'Temperature',
-        fontSize: 20.0,
+        fontSize: 15.0,
         textAlign: TextAlignTitledContainer.Center,
         backgroundColor: gradientColors[0],
         child: Container(
