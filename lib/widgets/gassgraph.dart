@@ -110,7 +110,7 @@ class _gassgraph extends State<gassgraph> {
             backgroundColor: gradientColors1[1],
             child:Container(
               width: (MediaQuery.of(context).size.width),
-              height: (MediaQuery.of(context).size.height)/4.5,
+              height: (MediaQuery.of(context).size.height)/4.2,
               padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
               child: LineChart(
                 LineChartData(
@@ -167,7 +167,7 @@ class _gassgraph extends State<gassgraph> {
             backgroundColor: gradientColors2[0],
             child:Container(
               width: (MediaQuery.of(context).size.width),
-              height: (MediaQuery.of(context).size.height)/4.5,
+              height: (MediaQuery.of(context).size.height)/4.2,
               padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
               child: LineChart(
                 LineChartData(
@@ -224,7 +224,7 @@ class _gassgraph extends State<gassgraph> {
             textAlign: TextAlignTitledContainer.Center,
             child:Container(
               width: (MediaQuery.of(context).size.width),
-              height: (MediaQuery.of(context).size.height)/4.5,
+              height: (MediaQuery.of(context).size.height)/4.2,
               padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
               child: LineChart(
                 LineChartData(
