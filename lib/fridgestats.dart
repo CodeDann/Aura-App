@@ -39,8 +39,8 @@ class _fridgestats extends State<fridgestats> {
       case 3:
         return (gassgraph());
       default:
-        // return tempgraph();
-        return Text('text');
+        return tempgraph();
+        // return Text('text');
     }
   }
 
@@ -63,7 +63,7 @@ class _fridgestats extends State<fridgestats> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.sensors_rounded),
-            label: 'Humid & Press',
+            label: 'Humid&Press',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.blur_on_sharp),
