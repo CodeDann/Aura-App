@@ -30,18 +30,18 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
 
             background: Colors.black38,
-            primary: Colors.deepPurple,
+            primary: Colors.deepPurpleAccent,
 
             onPrimary: Colors.black,
             onBackground: Colors.black,
 
-            secondary: Colors.deepPurple, //float action button
+            secondary: Colors.deepPurpleAccent, //float action button
             onSecondary: Colors.white,
 
             error: Colors.black,
             onError: Colors.white,
 
-            surface: Colors.deepPurple, // AppBar
+            surface: Colors.deepPurpleAccent, // AppBar
             onSurface: Colors.white, //icons, inputs
           ),
       ),
