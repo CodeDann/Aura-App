@@ -20,20 +20,12 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Food Waste App',
       theme: ThemeData(
-        // scaffoldBackgroundColor: Colors.black26,
-        // colorScheme: ColorScheme.dark(),
-        // primaryColorDark: Colors.deepPurple,
-        // appBarTheme: AppBarTheme(
-        //   backgroundColor: Colors.black45,
-        // ),
-        // primaryColor: Colors.deepPurple,
           colorScheme: const ColorScheme(
             brightness: Brightness.dark,
 
@@ -54,6 +46,7 @@ class MyApp extends StatelessWidget {
           ),
       ),
       home: const MyHomePage(title: 'Dashboard'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
