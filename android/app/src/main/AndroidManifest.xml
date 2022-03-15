@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.food_waste">
    <application
-        android:label="food_waste"
+        android:label="Aura App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
