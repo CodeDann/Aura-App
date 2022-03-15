@@ -121,13 +121,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 50,
+                          fontSize: 20,
                         ),
                         maxLines: 1,
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(200, 0, 0, 0.6),
+                      image: const DecorationImage(
+                        image: AssetImage(
+                            'assets/images/tempicon.jpeg'),
+                        fit: BoxFit.fill,
+                      ),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,
@@ -147,13 +151,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 50,
+                          fontSize: 20,
                         ),
                         maxLines: 3,
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(151, 5, 255, 0.6),
+                      image: const DecorationImage(
+                        image: AssetImage(
+                            'assets/images/particlesicon.jpeg'),
+                        fit: BoxFit.fill,
+                      ),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,
@@ -170,13 +178,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 50,
+                          fontSize: 20,
                         ),
                         maxLines: 1,
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(43, 209, 255, 0.6),
+                      image: const DecorationImage(
+                        image: AssetImage(
+                            'assets/images/humidityicon.jpeg'),
+                        fit: BoxFit.fill,
+                      ),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,
@@ -193,13 +205,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 50,
+                          fontSize: 20,
                         ),
                         maxLines: 1,
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(255, 242, 64, 0.6),
+                      image: const DecorationImage(
+                        image: AssetImage(
+                            'assets/images/pressureicon.jpeg'),
+                        fit: BoxFit.fill,
+                      ),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,
@@ -219,13 +235,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 50,
+                          fontSize: 18,
                         ),
                         maxLines: 3,
                       ),
                     ),
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(100, 255, 0, 0.6),
+                      image: const DecorationImage(
+                        image: AssetImage(
+                            'assets/images/gassesicon.jpeg'),
+                        fit: BoxFit.fill,
+                      ),
                       border: Border.all(
                         width: 3,
                         color: Colors.deepPurpleAccent,

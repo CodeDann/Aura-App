@@ -16,7 +16,7 @@ class wasteawareness extends StatefulWidget {
 
 class _wasteawareness extends State<wasteawareness> {
 
-  List<String> listOfPics= ['assets/images/awareness1.png', 'assets/images/awareness2.png'];
+  List<String> listOfPics= ['assets/images/awareness1.jpeg', 'assets/images/awareness2.jpeg', 'assets/images/awareness3.jpeg', 'assets/images/awareness4.jpeg'];
 
   @override
   Widget build(BuildContext context) {
