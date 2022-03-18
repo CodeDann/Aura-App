@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:food_waste/fridgestats.dart';
 
 //page imports
 import 'package:food_waste/myfood.dart';
@@ -112,7 +113,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisSpacing: 10,
                 crossAxisCount: 2,
                 children: <Widget>[
-                  Container(
+                  // temp widget
+                  GestureDetector(
+                    onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const fridgestats()),
+                    );
+                  },
+                  child: Container(
                     padding: const EdgeInsets.all(8),
                     child: Align(
                       alignment: Alignment.center,
@@ -138,121 +147,159 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
+                  )
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: AutoSizeText(
-                        "P1: ${contents.last["Particle1"].toStringAsFixed(
-                            2)}\nP10: ${contents.last["Particle10"]
-                            .toStringAsFixed(2)}\nP25: ${contents
-                            .last["Particle25"].toStringAsFixed(2)}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                  // particle widget
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const fridgestats()),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: AutoSizeText(
+                            "P1: ${contents.last["Particle1"].toStringAsFixed(
+                                2)}\nP10: ${contents.last["Particle10"]
+                                .toStringAsFixed(2)}\nP25: ${contents
+                                .last["Particle25"].toStringAsFixed(2)}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                            maxLines: 3,
+                          ),
                         ),
-                        maxLines: 3,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage(
-                            'assets/images/particlesicon.jpeg'),
-                        fit: BoxFit.fill,
-                      ),
-                      border: Border.all(
-                        width: 3,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: AutoSizeText(
-                        "${contents.last["Humidity"].toStringAsFixed(2)}%",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                        decoration: BoxDecoration(
+                          image: const DecorationImage(
+                            image: AssetImage(
+                                'assets/images/particlesicon.jpeg'),
+                            fit: BoxFit.fill,
+                          ),
+                          border: Border.all(
+                            width: 3,
+                            color: Colors.deepPurpleAccent,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        maxLines: 1,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage(
-                            'assets/images/humidityicon.jpeg'),
-                        fit: BoxFit.fill,
-                      ),
-                      border: Border.all(
-                        width: 3,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
+                      )
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: AutoSizeText(
-                        "${contents.last["Pressure"].toStringAsFixed(2)}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                  // humidity widget
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const fridgestats()),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: AutoSizeText(
+                            "${contents.last["Humidity"].toStringAsFixed(2)}%",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                            maxLines: 1,
+                          ),
                         ),
-                        maxLines: 1,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage(
-                            'assets/images/pressureicon.jpeg'),
-                        fit: BoxFit.fill,
-                      ),
-                      border: Border.all(
-                        width: 3,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: AutoSizeText(
-                        "O: ${contents.last["Oxidation"].toStringAsFixed(
-                            2)}\nR: ${contents.last["Reduction"]
-                            .toStringAsFixed(2)}\nNH4: ${contents
-                            .last["Ammonia"].toStringAsFixed(2)}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                        decoration: BoxDecoration(
+                          image: const DecorationImage(
+                            image: AssetImage(
+                                'assets/images/humidityicon.jpeg'),
+                            fit: BoxFit.fill,
+                          ),
+                          border: Border.all(
+                            width: 3,
+                            color: Colors.deepPurpleAccent,
+                          ),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        maxLines: 3,
                       ),
-                    ),
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage(
-                            'assets/images/gassesicon.jpeg'),
-                        fit: BoxFit.fill,
+                  ),
+                  // pressure widget
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const fridgestats()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: AutoSizeText(
+                          "${contents.last["Pressure"].toStringAsFixed(2)}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                          maxLines: 1,
+                        ),
                       ),
-                      border: Border.all(
-                        width: 3,
-                        color: Colors.deepPurpleAccent,
+                      decoration: BoxDecoration(
+                        image: const DecorationImage(
+                          image: AssetImage(
+                              'assets/images/pressureicon.jpeg'),
+                          fit: BoxFit.fill,
+                        ),
+                        border: Border.all(
+                          width: 3,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
+                  // gasses widget
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const fridgestats()),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: AutoSizeText(
+                          "O: ${contents.last["Oxidation"].toStringAsFixed(
+                              2)}\nR: ${contents.last["Reduction"]
+                              .toStringAsFixed(2)}\nNH4: ${contents
+                              .last["Ammonia"].toStringAsFixed(2)}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                          maxLines: 3,
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        image: const DecorationImage(
+                          image: AssetImage(
+                              'assets/images/gassesicon.jpeg'),
+                          fit: BoxFit.fill,
+                        ),
+                        border: Border.all(
+                          width: 3,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                  // go to food page
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
