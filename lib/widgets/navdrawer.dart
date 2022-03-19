@@ -82,7 +82,7 @@ class _navdrawer extends State<navdrawer> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const fridgestats()),
+                MaterialPageRoute(builder: (context) => const fridgestats(startState: 0)),
               );
             },
           ),

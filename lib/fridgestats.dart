@@ -9,7 +9,8 @@ import 'package:food_waste/widgets/gassgraph.dart';
 
 
 class fridgestats extends StatefulWidget {
-  const fridgestats({Key? key}) : super(key: key);
+  final int startState;
+  const fridgestats({Key? key, required this.startState}) : super(key: key);
 
 
   @override
@@ -18,7 +19,7 @@ class fridgestats extends StatefulWidget {
 
 class _fridgestats extends State<fridgestats> {
 
-  int _selectedIndex = 0;
+  int _selectedIndex = -1;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -26,13 +27,13 @@ class _fridgestats extends State<fridgestats> {
     });
   }
 
-  Widget _showGraph(index){
-    switch( index ){
+  Widget _showGraph(index) {
+    switch (index) {
       case 0:
-        return(tempgraph());
+        return (tempgraph());
         break;
       case 1:
-        return(pressuregraph());
+        return (pressuregraph());
       case 2:
         return (particlegraph());
         break;
@@ -40,12 +41,14 @@ class _fridgestats extends State<fridgestats> {
         return (gassgraph());
       default:
         return tempgraph();
-        // return Text('text');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if( _selectedIndex == -1){
+      _selectedIndex = widget.startState;
+    }
     return Scaffold(
       drawer: navdrawer(),
       appBar: AppBar(

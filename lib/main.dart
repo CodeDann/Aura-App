@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const fridgestats()),
+                      MaterialPageRoute(builder: (context) => const fridgestats(startState: 0)),
                     );
                   },
                   child: Container(
@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const fridgestats()),
+                          MaterialPageRoute(builder: (context) => const fridgestats(startState: 2)),
                         );
                       },
                       child: Container(
@@ -193,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const fridgestats()),
+                          MaterialPageRoute(builder: (context) => const fridgestats(startState: 1)),
                         );
                       },
                       child: Container(
@@ -229,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const fridgestats()),
+                        MaterialPageRoute(builder: (context) => const fridgestats(startState: 1)),
                       );
                     },
                     child: Container(
@@ -265,7 +265,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const fridgestats()),
+                        MaterialPageRoute(builder: (context) => const fridgestats(startState: 3)),
                       );
                     },
                     child: Container(
