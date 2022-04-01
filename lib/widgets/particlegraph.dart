@@ -130,8 +130,10 @@ class _particlegraph extends State<particlegraph> {
 
   @override
   Widget build(BuildContext context) {
+    // waits to get data from db before building the graph
+    // while waiting it shows a circular progress wheel
     return FutureBuilder(
-        future: _getData(), // the function to get your data from firebase or firestore
+        future: _getData(), // gets data from firestore
         builder : (BuildContext context, AsyncSnapshot snap){
           if(snap.data == null){
             return Container(
