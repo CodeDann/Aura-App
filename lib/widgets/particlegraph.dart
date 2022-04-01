@@ -44,7 +44,7 @@ class _particlegraph extends State<particlegraph> {
   ];
 
   // gets data on page load
-  Future<void> _getData() async {
+  Future<int> _getData() async {
     // get document from database
     DocumentSnapshot snapshot =
         await Database.collection('FoodWasteData').doc('sensordata').get();
@@ -58,7 +58,11 @@ class _particlegraph extends State<particlegraph> {
     setState(() {
       contents;
     });
+
+    return 1;
   }
+
+
 
   double doubleInRange(num start, num end) {
     var source = new Random();
@@ -67,20 +71,51 @@ class _particlegraph extends State<particlegraph> {
 
   List<FlSpot> _getSpots(String Name) {
     List<FlSpot> spots = [];
-    print(contents.length);
     try {
       for (int i = 0; i < 7; i++) {
         spots.add(FlSpot(i.toDouble(), double.parse('${contents[i][Name]}')));
       }
-      print("Loaded data from database");
     } catch (ArrayIndexOutOfBoundsException) {
       print("Error not enough data to display graph");
       spots.clear();
       for (int i = 0; i < 7; i++) {
-        spots.add(FlSpot(i.toDouble(), doubleInRange(2, 8)));
+        spots.add(FlSpot(i.toDouble(), doubleInRange(2, 6)));
       }
     }
     return spots;
+  }
+
+  double _getMinData(){
+    double minVal = 10000;
+    if( contents.isEmpty){ return 0; }
+    for( int i = 0; i < contents.length; i++){
+      if(contents[i]['Particle1'] < minVal){
+        minVal = contents[i]['Particle1'];
+      }
+      else if(contents[i]['Particle10'] < minVal){
+        minVal = contents[i]['Particle10'];
+      }
+      else if(contents[i]['Particle25'] < minVal){
+        minVal = contents[i]['Particle25'];
+      }
+    }
+    return minVal;
+  }
+  double _getMaxData(){
+    double maxVal = 0;
+    if( contents.isEmpty){ return maxVal; }
+    for( int i = 0; i < contents.length; i++){
+      if(contents[i]['Particle1'] > maxVal){
+        maxVal = contents[i]['Particle1'];
+      }
+      else if(contents[i]['Particle10'] > maxVal){
+        maxVal = contents[i]['Particle10'];
+      }
+      else if(contents[i]['Particle25'] > maxVal){
+        maxVal = contents[i]['Particle25'];
+      }
+    }
+    return maxVal;
   }
 
   @override
@@ -95,106 +130,128 @@ class _particlegraph extends State<particlegraph> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(0, 20, 40, 0),
-            child: RichText(
-              textAlign: TextAlign.justify,
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(
-                      text: 'Particle1   ',
-                      style: TextStyle(color: gradientColors1[0])),
-                  TextSpan(
-                      text: 'Particle10   ',
-                      style: TextStyle(color: gradientColors2[0])),
-                  TextSpan(
-                      text: 'Particle25',
-                      style: TextStyle(color: gradientColors3[1])),
+    return FutureBuilder(
+        future: _getData(), // the function to get your data from firebase or firestore
+        builder : (BuildContext context, AsyncSnapshot snap){
+          if(snap.data == null){
+            return Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(strokeWidth: 6),
+                  )
                 ],
               ),
-            ),
-          ),
-          //particle graph container
-          Container(
-            width: (MediaQuery.of(context).size.width),
-            height: (MediaQuery.of(context).size.height)/1.5,
-            padding: EdgeInsets.fromLTRB(0, 20, 40, 0),
-            child: LineChart(
-              LineChartData(
-                minX: 0,
-                maxX: 6,
-                minY: 0,
-                maxY: 10,
-                titlesData: particlexy.getTitleData(),
-                gridData: FlGridData(
-                  show: true,
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: const Color(0xc1c1c1FF),
-                      strokeWidth: 1,
-                    );
-                  },
-                  drawVerticalLine: true,
-                  getDrawingVerticalLine: (value) {
-                    return FlLine(
-                      color: const Color(0xc1c1c1FF),
-                      strokeWidth: 1,
-                    );
-                  },
-                ),
-                borderData: FlBorderData(
-                  show: true,
-                  border: Border.all(color: const Color(0xff37434d), width: 1),
-                ),
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: _getSpots("Particle1"),
-                    isCurved: true,
-                    colors: gradientColors1,
-                    barWidth: 5,
-                    // dotData: FlDotData(show: false),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      colors: gradientColors1
-                          .map((color) => color.withOpacity(0.3))
-                          .toList(),
+            );
+          }
+          else{
+            //return the widget that you want to display after loading
+            return Container(
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 20, 40, 0),
+                    child: RichText(
+                      textAlign: TextAlign.justify,
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: 'Particle1   ',
+                              style: TextStyle(color: gradientColors1[0])),
+                          TextSpan(
+                              text: 'Particle10   ',
+                              style: TextStyle(color: gradientColors2[0])),
+                          TextSpan(
+                              text: 'Particle25',
+                              style: TextStyle(color: gradientColors3[1])),
+                        ],
+                      ),
                     ),
                   ),
-                  LineChartBarData(
-                    spots: _getSpots("Particle10"),
-                    isCurved: true,
-                    colors: gradientColors2,
-                    barWidth: 5,
-                    // dotData: FlDotData(show: false),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      colors: gradientColors2
-                          .map((color) => color.withOpacity(0.3))
-                          .toList(),
-                    ),
-                  ),
-                  LineChartBarData(
-                    spots: _getSpots("Particle25"),
-                    isCurved: true,
-                    colors: gradientColors3,
-                    barWidth: 5,
-                    // dotData: FlDotData(show: false),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      colors: gradientColors3
-                          .map((color) => color.withOpacity(0.3))
-                          .toList(),
+                  //particle graph container
+                  Container(
+                    width: (MediaQuery.of(context).size.width),
+                    height: (MediaQuery.of(context).size.height)/1.5,
+                    padding: EdgeInsets.fromLTRB(0, 20, 40, 0),
+                    child: LineChart(
+                      LineChartData(
+                        minX: 0,
+                        maxX: 6,
+                        minY: _getMinData(),
+                        maxY: _getMaxData(),
+                        titlesData: particlexy.getTitleData(),
+                        clipData: FlClipData.all(),
+                        gridData: FlGridData(
+                          show: true,
+                          getDrawingHorizontalLine: (value) {
+                            return FlLine(
+                              color: const Color(0xc1c1c1FF),
+                              strokeWidth: 1,
+                            );
+                          },
+                          drawVerticalLine: true,
+                          getDrawingVerticalLine: (value) {
+                            return FlLine(
+                              color: const Color(0xc1c1c1FF),
+                              strokeWidth: 1,
+                            );
+                          },
+                        ),
+                        borderData: FlBorderData(
+                          show: true,
+                          border: Border.all(color: const Color(0xff37434d), width: 1),
+                        ),
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: _getSpots("Particle1"),
+                            isCurved: true,
+                            colors: gradientColors1,
+                            barWidth: 5,
+                            // dotData: FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              colors: gradientColors1
+                                  .map((color) => color.withOpacity(0.3))
+                                  .toList(),
+                            ),
+                          ),
+                          LineChartBarData(
+                            spots: _getSpots("Particle10"),
+                            isCurved: true,
+                            colors: gradientColors2,
+                            barWidth: 5,
+                            // dotData: FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              colors: gradientColors2
+                                  .map((color) => color.withOpacity(0.3))
+                                  .toList(),
+                            ),
+                          ),
+                          LineChartBarData(
+                            spots: _getSpots("Particle25"),
+                            isCurved: true,
+                            colors: gradientColors3,
+                            barWidth: 5,
+                            // dotData: FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                              show: true,
+                              colors: gradientColors3
+                                  .map((color) => color.withOpacity(0.3))
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
+            );
+          }
+        }
     );
   }
 }
