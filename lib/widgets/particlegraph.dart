@@ -85,22 +85,6 @@ class _particlegraph extends State<particlegraph> {
     return spots;
   }
 
-  double _getMinData(){
-    double minVal = 10000;
-    if( contents.isEmpty){ return 0; }
-    for( int i = 0; i < contents.length; i++){
-      if(contents[i]['Particle1'] < minVal){
-        minVal = contents[i]['Particle1'];
-      }
-      else if(contents[i]['Particle10'] < minVal){
-        minVal = contents[i]['Particle10'];
-      }
-      else if(contents[i]['Particle25'] < minVal){
-        minVal = contents[i]['Particle25'];
-      }
-    }
-    return minVal;
-  }
   double _getMaxData(){
     double maxVal = 0;
     if( contents.isEmpty){ return maxVal; }
@@ -115,7 +99,7 @@ class _particlegraph extends State<particlegraph> {
         maxVal = contents[i]['Particle25'];
       }
     }
-    return maxVal;
+    return maxVal*1.2;
   }
 
   @override
@@ -181,7 +165,7 @@ class _particlegraph extends State<particlegraph> {
                       LineChartData(
                         minX: 0,
                         maxX: 6,
-                        minY: _getMinData(),
+                        minY: 0,
                         maxY: _getMaxData(),
                         titlesData: particlexy.getTitleData(),
                         clipData: FlClipData.all(),

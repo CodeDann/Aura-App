@@ -43,7 +43,7 @@ class _gassgraph extends State<gassgraph> {
   ];
 
   // gets data on page load
-  Future<void> _getData() async {
+  Future<int> _getData() async {
     // get document from database
     DocumentSnapshot snapshot = await Database.collection('FoodWasteData').doc('sensordata').get();
     // convert data to a map
@@ -56,6 +56,8 @@ class _gassgraph extends State<gassgraph> {
     setState(() {
       contents;
     });
+
+    return 1;
   }
 
   double doubleInRange( num start, num end) {
@@ -65,12 +67,10 @@ class _gassgraph extends State<gassgraph> {
 
   List<FlSpot> _getSpots(String name){
     List<FlSpot> spots = [];
-    print(contents.length);
     try{
       for( int i = 0; i < 7; i++ ){
         spots.add(FlSpot(i.toDouble(), double.parse('${contents[i][name]}')));
       }
-      print("Loaded data from database");
     }catch(ArrayIndexOutOfBoundsException) {
       print("Error not enough data to display graph");
       spots.clear();
@@ -94,186 +94,217 @@ class _gassgraph extends State<gassgraph> {
   LineTitles reductionxy = LineTitles(5);
   LineTitles ammoniaxy = LineTitles(6);
 
+  double _getMaxData(String name){
+    double maxVal = 0;
+    if( contents.isEmpty){ return maxVal; }
+    for( int i = 0; i < contents.length; i++){
+      if(contents[i][name] > maxVal){
+        maxVal = contents[i][name];
+      }
+    }
+    return maxVal*1.2;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(0, 40, 20, 0),
-      child: Column(
-        children: [
-          //oxidation graph
-          TitledContainer(
-            titleColor: Colors.black,
-            title: 'Oxidation',
-            fontSize: 15.0,
-            textAlign: TextAlignTitledContainer.Center,
-            backgroundColor: gradientColors1[1],
-            child:Container(
-              width: (MediaQuery.of(context).size.width),
-              height: (MediaQuery.of(context).size.height)/4.2,
-              padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
-              child: LineChart(
-                LineChartData(
-                  minX: 0,
-                  maxX: 6,
-                  minY: 0,
-                  maxY: 50,
-                  titlesData: oxidationxy.getTitleData(),
-                  gridData: FlGridData(
-                    show: true,
-                    getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: const Color(0xc1c1c1FF),
-                        strokeWidth: 1,
-                      );
-                    },
-                    drawVerticalLine: true,
-                    getDrawingVerticalLine: (value) {
-                      return FlLine(
-                        color: const Color(0xc1c1c1FF),
-                        strokeWidth: 1,
-                      );
-                    },
-                  ),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border.all(color: const Color(0xff37434d), width: 1),
-                  ),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: _getSpots('Oxidation'),
-                      isCurved: true,
-                      colors: gradientColors1,
-                      barWidth: 5,
-                      // dotData: FlDotData(show: false),
-                      belowBarData: BarAreaData(
-                        show: true,
-                        colors: gradientColors1
-                            .map((color) => color.withOpacity(0.3))
-                            .toList(),
+    return FutureBuilder(
+        future: _getData(), // gets data from firestore
+        builder : (BuildContext context, AsyncSnapshot snap){
+          if(snap.data == null){
+            return Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(strokeWidth: 6),
+                  )
+                ],
+              ),
+            );
+          }
+          else{
+            //return the widget that you want to display after loading
+            return Container(
+              padding: EdgeInsets.fromLTRB(0, 40, 20, 0),
+              child: Column(
+                  children: [
+                    //oxidation graph
+                    TitledContainer(
+                      titleColor: Colors.black,
+                      title: 'Oxidation',
+                      fontSize: 15.0,
+                      textAlign: TextAlignTitledContainer.Center,
+                      backgroundColor: gradientColors1[1],
+                      child:Container(
+                        width: (MediaQuery.of(context).size.width),
+                        height: (MediaQuery.of(context).size.height)/4.2,
+                        padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
+                        child: LineChart(
+                          LineChartData(
+                            minX: 0,
+                            maxX: 6,
+                            minY: 0,
+                            maxY: _getMaxData('Oxidation'),
+                            titlesData: oxidationxy.getTitleData(),
+                            gridData: FlGridData(
+                              show: true,
+                              getDrawingHorizontalLine: (value) {
+                                return FlLine(
+                                  color: const Color(0xc1c1c1FF),
+                                  strokeWidth: 1,
+                                );
+                              },
+                              drawVerticalLine: true,
+                              getDrawingVerticalLine: (value) {
+                                return FlLine(
+                                  color: const Color(0xc1c1c1FF),
+                                  strokeWidth: 1,
+                                );
+                              },
+                            ),
+                            borderData: FlBorderData(
+                              show: true,
+                              border: Border.all(color: const Color(0xff37434d), width: 1),
+                            ),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: _getSpots('Oxidation'),
+                                isCurved: true,
+                                colors: gradientColors1,
+                                barWidth: 5,
+                                // dotData: FlDotData(show: false),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  colors: gradientColors1
+                                      .map((color) => color.withOpacity(0.3))
+                                      .toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          //Reduction graph
-          TitledContainer(
-            titleColor: Colors.black,
-            title: 'Reduction',
-            fontSize: 15.0,
-            textAlign: TextAlignTitledContainer.Center,
-            backgroundColor: gradientColors2[0],
-            child:Container(
-              width: (MediaQuery.of(context).size.width),
-              height: (MediaQuery.of(context).size.height)/4.2,
-              padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
-              child: LineChart(
-                LineChartData(
-                  minX: 0,
-                  maxX: 6,
-                  minY: 0,
-                  maxY: 500,
-                  titlesData: reductionxy.getTitleData(),
-                  gridData: FlGridData(
-                    show: true,
-                    getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: const Color(0xc1c1c1FF),
-                        strokeWidth: 1,
-                      );
-                    },
-                    drawVerticalLine: true,
-                    getDrawingVerticalLine: (value) {
-                      return FlLine(
-                        color: const Color(0xc1c1c1FF),
-                        strokeWidth: 1,
-                      );
-                    },
-                  ),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border.all(color: const Color(0xff37434d), width: 1),
-                  ),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: _getSpots('Reduction'),
-                      isCurved: true,
-                      colors: gradientColors2,
-                      barWidth: 5,
-                      // dotData: FlDotData(show: false),
-                      belowBarData: BarAreaData(
-                        show: true,
-                        colors: gradientColors2
-                            .map((color) => color.withOpacity(0.3))
-                            .toList(),
+                    //Reduction graph
+                    TitledContainer(
+                      titleColor: Colors.black,
+                      title: 'Reduction',
+                      fontSize: 15.0,
+                      textAlign: TextAlignTitledContainer.Center,
+                      backgroundColor: gradientColors2[0],
+                      child:Container(
+                        width: (MediaQuery.of(context).size.width),
+                        height: (MediaQuery.of(context).size.height)/4.2,
+                        padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
+                        child: LineChart(
+                          LineChartData(
+                            minX: 0,
+                            maxX: 6,
+                            minY: 0,
+                            maxY: _getMaxData('Reduction'),
+                            titlesData: reductionxy.getTitleData(),
+                            gridData: FlGridData(
+                              show: true,
+                              getDrawingHorizontalLine: (value) {
+                                return FlLine(
+                                  color: const Color(0xc1c1c1FF),
+                                  strokeWidth: 1,
+                                );
+                              },
+                              drawVerticalLine: true,
+                              getDrawingVerticalLine: (value) {
+                                return FlLine(
+                                  color: const Color(0xc1c1c1FF),
+                                  strokeWidth: 1,
+                                );
+                              },
+                            ),
+                            borderData: FlBorderData(
+                              show: true,
+                              border: Border.all(color: const Color(0xff37434d), width: 1),
+                            ),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: _getSpots('Reduction'),
+                                isCurved: true,
+                                colors: gradientColors2,
+                                barWidth: 5,
+                                // dotData: FlDotData(show: false),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  colors: gradientColors2
+                                      .map((color) => color.withOpacity(0.3))
+                                      .toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          //ammonia graph
-          TitledContainer(
-            titleColor: Colors.black,
-            title: 'Ammonia',
-            fontSize: 15.0,
-            backgroundColor: gradientColors3[0],
-            textAlign: TextAlignTitledContainer.Center,
-            child:Container(
-              width: (MediaQuery.of(context).size.width),
-              height: (MediaQuery.of(context).size.height)/4.2,
-              padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
-              child: LineChart(
-                LineChartData(
-                  minX: 0,
-                  maxX: 6,
-                  minY: 0,
-                  maxY: 300,
-                  titlesData: ammoniaxy.getTitleData(),
-                  gridData: FlGridData(
-                    show: true,
-                    getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: const Color(0xc1c1c1FF),
-                        strokeWidth: 1,
-                      );
-                    },
-                    drawVerticalLine: true,
-                    getDrawingVerticalLine: (value) {
-                      return FlLine(
-                        color: const Color(0xc1c1c1FF),
-                        strokeWidth: 1,
-                      );
-                    },
-                  ),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border.all(color: const Color(0xff37434d), width: 1),
-                  ),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: _getSpots('Ammonia'),
-                      isCurved: true,
-                      colors: gradientColors3,
-                      barWidth: 5,
-                      // dotData: FlDotData(show: false),
-                      belowBarData: BarAreaData(
-                        show: true,
-                        colors: gradientColors3
-                            .map((color) => color.withOpacity(0.3))
-                            .toList(),
+                    //ammonia graph
+                    TitledContainer(
+                      titleColor: Colors.black,
+                      title: 'Ammonia',
+                      fontSize: 15.0,
+                      backgroundColor: gradientColors3[0],
+                      textAlign: TextAlignTitledContainer.Center,
+                      child:Container(
+                        width: (MediaQuery.of(context).size.width),
+                        height: (MediaQuery.of(context).size.height)/4.2,
+                        padding: EdgeInsets.fromLTRB(10, 20, 40, 10),
+                        child: LineChart(
+                          LineChartData(
+                            minX: 0,
+                            maxX: 6,
+                            minY: 0,
+                            maxY: _getMaxData('Ammonia'),
+                            titlesData: ammoniaxy.getTitleData(),
+                            gridData: FlGridData(
+                              show: true,
+                              getDrawingHorizontalLine: (value) {
+                                return FlLine(
+                                  color: const Color(0xc1c1c1FF),
+                                  strokeWidth: 1,
+                                );
+                              },
+                              drawVerticalLine: true,
+                              getDrawingVerticalLine: (value) {
+                                return FlLine(
+                                  color: const Color(0xc1c1c1FF),
+                                  strokeWidth: 1,
+                                );
+                              },
+                            ),
+                            borderData: FlBorderData(
+                              show: true,
+                              border: Border.all(color: const Color(0xff37434d), width: 1),
+                            ),
+                            lineBarsData: [
+                              LineChartBarData(
+                                spots: _getSpots('Ammonia'),
+                                isCurved: true,
+                                colors: gradientColors3,
+                                barWidth: 5,
+                                // dotData: FlDotData(show: false),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  colors: gradientColors3
+                                      .map((color) => color.withOpacity(0.3))
+                                      .toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ],
-                ),
+                  ]
               ),
-            ),
-          ),
-        ]
-      ),
+            );
+          }
+        }
     );
   }
 }
