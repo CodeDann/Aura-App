@@ -110,8 +110,6 @@ class _particlegraph extends State<particlegraph> {
     super.initState();
   }
 
-  LineTitles tempTitles = LineTitles(0);
-
   @override
   Widget build(BuildContext context) {
     // waits to get data from db before building the graph

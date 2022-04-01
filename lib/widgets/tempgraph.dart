@@ -33,6 +33,9 @@ class _tempgraph extends State<tempgraph> {
     const Color.fromRGBO(200, 100, 50, 0.8),
   ];
 
+  LineTitles tempTitles = LineTitles(0);
+
+
   // gets data on page load
   Future<int> _getData() async {
     // get document from database
@@ -79,9 +82,6 @@ class _tempgraph extends State<tempgraph> {
     });
     super.initState();
   }
-
-  LineTitles tempTitles = LineTitles(0);
-
   double _getMaxData(String name){
     double maxVal = 0;
     if( contents.isEmpty){ return maxVal; }

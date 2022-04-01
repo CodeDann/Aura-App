@@ -27,6 +27,17 @@ class LineTitles {
   //default date formatter for the page
   DateFormat formatter = DateFormat('E');
 
+  double _getMaxData(String name){
+    _getData();
+    double maxVal = 0;
+    if( contents.isEmpty ){ return 1; }
+    for( int i = 0; i < contents.length; i++){
+      if(contents[i][name] > maxVal){
+        maxVal = contents[i][name];
+      }
+    }
+    return maxVal;
+  }
 
   String _getDayTitles(index) {
     switch (index.toInt()) {
@@ -51,6 +62,7 @@ class LineTitles {
   getTitleData(){
     //temp
     if( this.type == 0){
+      String name = 'Temperature';
       return FlTitlesData(
         show: true,
         bottomTitles: SideTitles(
@@ -90,22 +102,9 @@ class LineTitles {
             fontSize: 15,
           ),
           getTitles: (value) {
-            switch (value.toInt()) {
-              case 0:
-                return '0°C';
-              case 5:
-                return '5°C';
-              case 10:
-                return '10°C';
-              case 15:
-                return '15°C';
-              case 20:
-                return '20°C';
-              case 25:
-                return '25°C';
-            }
-            return '';
+            return value.toInt().toString() + '°C';
           },
+          interval: 5,
           reservedSize: 50,
           margin: 10,
         ),
@@ -113,6 +112,7 @@ class LineTitles {
     }
     //humidity
     else if( this.type == 1){
+      String name = 'Humidity';
       return FlTitlesData(
         show: true,
         bottomTitles: SideTitles(
@@ -152,16 +152,9 @@ class LineTitles {
             fontSize: 15,
           ),
           getTitles: (value) {
-            switch (value.toInt()) {
-              case 0:
-                return '0';
-              case 25:
-                return '25';
-              case 50:
-                return '50';
-            }
-            return '';
+            return value.toInt().toString();
           },
+          interval: 5,
           reservedSize: 35,
           margin: 12,
         ),
@@ -169,6 +162,7 @@ class LineTitles {
     }
     //pressure
     else if( this.type == 2){
+      String name = 'Pressure';
       return FlTitlesData(
         show: true,
         bottomTitles: SideTitles(
@@ -208,16 +202,9 @@ class LineTitles {
             fontSize: 15,
           ),
           getTitles: (value) {
-            switch (value.toInt()) {
-              case 0:
-                return '0';
-              case 750:
-                return '750';
-              case 1500:
-                return '1500';
-            }
-            return '';
+            return value.toInt().toString();
           },
+          interval: 200,
           reservedSize: 35,
           margin: 12,
         ),
@@ -264,16 +251,9 @@ class LineTitles {
             fontSize: 15,
           ),
           getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '1';
-              case 5:
-                return '5';
-              case 10:
-                return '10';
-            }
-            return '';
+            return value.toInt().toString();
           },
+          interval: 5,
           reservedSize: 35,
           margin: 12,
         ),
@@ -320,16 +300,9 @@ class LineTitles {
             fontSize: 15,
           ),
           getTitles: (value) {
-            switch (value.toInt()) {
-              case 0:
-                return '0';
-              case 25:
-                return '25';
-              case 50:
-                return '50';
-            }
-            return '';
+            return value.toInt().toString();
           },
+          interval: 5,
           reservedSize: 35,
           margin: 12,
         ),
@@ -376,16 +349,9 @@ class LineTitles {
             fontSize: 15,
           ),
           getTitles: (value) {
-            switch (value.toInt()) {
-              case 0:
-                return '0';
-              case 250:
-                return '250';
-              case 500:
-                return '500';
-            }
-            return '';
+            return value.toInt().toString();
           },
+          interval: 5,
           reservedSize: 35,
           margin: 12,
         ),
@@ -432,16 +398,9 @@ class LineTitles {
             fontSize: 15,
           ),
           getTitles: (value) {
-            switch (value.toInt()) {
-              case 0:
-                return '0';
-              case 150:
-                return '150';
-              case 300:
-                return '300';
-            }
-            return '';
+            return value.toInt().toString();
           },
+          interval: 5,
           reservedSize: 35,
           margin: 12,
         ),
