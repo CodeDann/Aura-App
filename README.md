@@ -1,6 +1,7 @@
-# food_waste
+# Aura
 
-Final Year Project Application
+Aura is a product developed as Final year project a the Univerity of Glasgow. This repositry is for the companion app AuraApp
+
 
 ## Getting Started
 
